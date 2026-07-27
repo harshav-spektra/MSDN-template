@@ -2,7 +2,7 @@
 
 ### Lab Duration: 8 Hours
 
-## Lab Scenario
+## 📘 Lab Scenario
 
 Contoso AI Solutions is building the next generation of its customer-facing intelligent assistant platform. The current assistants lose all context at the end of every conversation — users must re-introduce themselves, re-explain their preferences, and re-state their goals in every new session. This leads to poor user experience, longer interaction times, and lower customer satisfaction scores.
 
@@ -10,7 +10,7 @@ To solve this, the engineering team has been tasked with integrating **Agent Mem
 
 As an AI Engineer at Contoso, your role is to build and validate this memory-enabled agent platform. You will work with the **Agent Memory** framework built on Azure OpenAI, configure local and cloud-backed persistence backends, integrate memory into the Microsoft Agent Framework, and ultimately build and deploy a production-ready memory-enabled agent for a real-world scenario — demonstrating that Contoso's assistants can now remember every user, forever.
 
-## Lab overview
+## 📖 Lab overview
 The **Advanced Dynamic Memory Architecture — Agent Memory** workshop is designed to teach developers how to build intelligent agents with persistent, searchable memory across multi-session conversations.
 
 The lab begins with environment setup and local memory exploration using a zero-configuration SQLite backend, giving participants a concrete understanding of how `AgentMemory` stores turns, compresses older content into summaries, and recalls facts across sessions. Participants then integrate memory into the Microsoft Agent Framework as a context provider, observing how the system automatically injects prior knowledge into every agent response without any manual retrieval code.
@@ -21,7 +21,9 @@ The final technical exercises cover the **FastAPI server mode** — exposing mem
 
 By completing this lab, participants will gain hands-on experience building, tuning, and deploying persistent memory for AI agents — moving from a stateless chatbot pattern to a production-grade memory system backed by Azure cloud services.
 
-## Prerequisites
+## 🎯 Lab Objective
+
+## ⚙️ Prerequisites
 
 Participants should have:
 
@@ -32,11 +34,11 @@ Participants should have:
 - **Familiarity with Azure OpenAI** — knowing the difference between a deployment name and a model name, and how to find endpoint and key values in the Azure Portal.
 - No prior Agent Memory experience required — the lab introduces all framework concepts from scratch.
 
-## Architecture
+## 🏗️ Architecture
 
-## Architecture Diagram
+## 🖼️ Architecture Diagram
 
-### Components explained
+### 🔍 Components explained
 - **Azure lab VM**: your working environment for the entire lab.
 - **Preloaded repository**: the source of all demos, configuration examples, tests, and infrastructure references used in the exercises.
 - **`demo/`**: contains the runnable learning path scripts, including local memory, framework integration, server mode, and Cosmos DB examples.
@@ -47,7 +49,7 @@ Participants should have:
 - **Azure OpenAI configuration**: supports the model-driven memory processing used by the repo.
 - **Streamlit and FastAPI**: provide live interaction patterns for service-mode exploration.
 
-# Getting Started with Lab
+# 🚀 Getting Started with Lab
 
 Welcome to the Modern Identity Governance & Secure Access with Microsoft Entra Workshop!. Let's begin by making the most of this experience:
 
@@ -118,7 +120,7 @@ Now you're all set to explore the powerful world of technology. Feel free to rea
    
 Now you're all set to explore the powerful world of technology. Feel free to reach out if you have any questions along the way. Enjoy your workshop!
 
-## Support Contact
+## 📞  Support Contact
 
 The CloudLabs support team is available 24/7, 365 days a year, via email and live chat to ensure seamless assistance at any time. We offer dedicated support channels tailored specifically for both learners and instructors, ensuring that all your needs are promptly and efficiently addressed.
 
