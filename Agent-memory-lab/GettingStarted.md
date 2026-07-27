@@ -55,13 +55,13 @@ Welcome to the Modern Identity Governance & Secure Access with Microsoft Entra W
 
 Once you are ready to dive in, your virtual machine and guide will be right at your fingertips within your web browser.
  
-![Access Your VM and Lab Guide](./Images/env.png)
+![Access Your VM and Lab Guide](./Images/a2.png)
 
 ## Lab Guide Zoom In/Zoom Out
 
 To adjust the zoom level for the environment page, click the **A↕ : 100%** icon located next to the timer in the lab environment.
 
-![](./Images/GS2.png)
+![](./Images/a3.png)
 
 ## Virtual Machine & Guide
  
@@ -71,25 +71,25 @@ Your virtual machine is your workhorse throughout the workshop. The guide is you
  
 To get a better understanding of your lab resources and credentials, navigate to the **Environment** tab.
  
-![Explore Lab Resources](./Images/envtab_newUI.png)
+![Explore Lab Resources](./Images/a4.png)
  
 ## Utilizing the Split Window Feature
  
 For convenience, you can open the guide in a separate window by selecting the **Split Window** button from the top right corner.
  
-![Use the Split Window Feature](./Images/GS4.png)
+![Use the Split Window Feature](./Images/a5.png)
  
 ## Managing Your Virtual Machine
  
 Feel free to **start, stop, or restart (2)** your virtual machine as needed from the **Resources (1)** tab. Your experience is in your hands!
  
-![Manage Your Virtual Machine](./Images/GS5.png)	
+![Manage Your Virtual Machine](./Images/a6.png)	
 
 ## Lab Validation
 
 After completing the task, hit the **Validate** button under the Validation tab integrated within your lab guide. If you receive a success message, you can proceed to the next task; if not, carefully read the error message and retry the step, following the instructions in the lab guide.
 
-   ![Inline Validation](./Images/validation.png)
+   ![Inline Validation](./Images/a7.png)
  
 Now you're all set to explore the powerful world of technology. Feel free to reach out if you have any questions along the way. 
 
@@ -97,23 +97,23 @@ Now you're all set to explore the powerful world of technology. Feel free to rea
  
 1. On your virtual machine, click on the Azure Portal icon as shown below:
  
-    ![Launch Azure Portal](./Images/Azureportal.png)
+    ![Launch Azure Portal](./Images/a8.png)
  
 2. You'll see the **Sign into Microsoft Azure** tab. Here, enter your credentials **(1)** and click **Next (2)**.
  
    - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
  
-    ![Enter Your Username](./Images/GS6.png)
+    ![Enter Your Username](./Images/a9.png)
  
 3. Next, provide your temporary password **(1)** and select **Sign in (2)**.
  
    - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
  
-      ![Enter Your Password](./Images/GS6-1.png)
+      ![Enter Your Password](./Images/a10.png)
  
 4. If prompted to stay signed in, you can click **No**.
 
-   ![](./Images/GS7.png)
+   ![](./Images/a11.png)
  
    
 Now you're all set to explore the powerful world of technology. Feel free to reach out if you have any questions along the way. Enjoy your workshop!
@@ -129,7 +129,7 @@ Learner Support Contacts:
 
 Now, click on Next from the lower right corner to move on to the next page.
 
-   ![](./Images/Nextpage.png)
+   ![](./Images/a12.png)
 
 ### Happy Learning!!
 
