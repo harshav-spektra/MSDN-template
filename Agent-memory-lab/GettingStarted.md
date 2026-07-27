@@ -1,86 +1,40 @@
-# Getting Started
+# Advanced Dynamic Memory Architecture — Agent Memory
 
-## Scenario
-In this lab, you will work on a preloaded Azure lab virtual machine to explore how Agent Memory adds persistent, searchable memory to Python-based agent applications across multiple sessions. The lab is grounded in the provided repository and the **Advanced Dynamic Memory Architecture - Agent Memory** TOC flow. You will begin with a local SQLite-backed implementation, move into Microsoft Agent Framework integration, extend persistence to Azure Cosmos DB, run the project in server mode with a user interface, validate the environment with tests, and finish with a production-oriented architecture review.
+### Lab Duration: 8 Hours
+
+## Lab Scenario
+
+Contoso AI Solutions is building the next generation of its customer-facing intelligent assistant platform. The current assistants lose all context at the end of every conversation — users must re-introduce themselves, re-explain their preferences, and re-state their goals in every new session. This leads to poor user experience, longer interaction times, and lower customer satisfaction scores.
+
+To solve this, the engineering team has been tasked with integrating **Agent Memory** — a persistent, searchable memory layer that allows AI agents to remember users across sessions, extract long-term insights from conversations, and deliver contextually aware responses from the very first message of every new conversation.
+
+As an AI Engineer at Contoso, your role is to build and validate this memory-enabled agent platform. You will work with the **Agent Memory** framework built on Azure OpenAI, configure local and cloud-backed persistence backends, integrate memory into the Microsoft Agent Framework, and ultimately build and deploy a production-ready memory-enabled agent for a real-world scenario — demonstrating that Contoso's assistants can now remember every user, forever.
 
 ## Lab overview
-This is an 8-hour Azure lab delivered on a single prepared VM. The repository is already available on the machine, along with Python tooling needed to run the project. Throughout the lab, you will inspect existing code rather than build a new app from scratch. You will sign in to Azure, confirm your environment, run the supplied demos, and compare how the same memory architecture behaves across local and cloud-backed backends.
+The **Advanced Dynamic Memory Architecture — Agent Memory** workshop is designed to teach developers how to build intelligent agents with persistent, searchable memory across multi-session conversations.
 
-The lab exercises progress in this order:
+The lab begins with environment setup and local memory exploration using a zero-configuration SQLite backend, giving participants a concrete understanding of how `AgentMemory` stores turns, compresses older content into summaries, and recalls facts across sessions. Participants then integrate memory into the Microsoft Agent Framework as a context provider, observing how the system automatically injects prior knowledge into every agent response without any manual retrieval code.
 
-1. **Environment Setup & Local Memory** - verify the toolchain, review `.env` settings, install dependencies, and run the SQLite demo.
-2. **Agent Framework Integration** - inspect and run the framework-based demos and compare retrieval patterns.
-3. **Azure Cosmos DB Backend** - switch from local storage to cloud persistence and observe cross-run recall.
-4. **Bounded Long-Term Memory & Insight Curation** - compare itemized and synthesized long-term memory strategies.
-5. **Live Server Mode & Streamlit UI** - run the FastAPI server, test terminal chat, and launch the Streamlit experience.
-6. **Validation, Testing & Troubleshooting** - run non-live and live checks, then diagnose common issues.
-7. **Production Hardening & Architecture Review** - review authentication, infrastructure, and deployment considerations.
+As the lab progresses, participants move from local to cloud-scale persistence by connecting `AgentMemory` to **Azure Cosmos DB** — verifying that memory survives full application restarts and is accessible from anywhere. They explore advanced curation strategies including bounded itemized memory, which keeps the insight pool compact and relevant by scoring and pruning older facts, and compare it against free-form synthesis that resolves contradictions across sessions.
 
-## Objectives
-By the end of this lab, you will be able to:
+The final technical exercises cover the **FastAPI server mode** — exposing memory as a shared HTTP service that multiple clients can talk to simultaneously — and demonstrate the entire system through a real-time Streamlit visualization dashboard. The lab concludes with a guided capstone exercise where participants build their own memory-enabled agent from scratch for a scenario of their choice.
 
-- Sign in to the Azure portal and confirm the correct lab subscription and tenant.
-- Locate and inspect the prepared repository on the lab VM.
-- Verify Python, `uv`, and Git tooling before running the sample code.
-- Understand how the repo is organized across `demo/`, `memory/`, `agent/`, `server/`, `client/`, `tests/`, and `infra/`.
-- Follow the seven-exercise progression from local memory to production review.
+By completing this lab, participants will gain hands-on experience building, tuning, and deploying persistent memory for AI agents — moving from a stateless chatbot pattern to a production-grade memory system backed by Azure cloud services.
 
 ## Prerequisites
-Before starting, you should have:
 
-- Basic Python experience
-- Familiarity with running terminal commands
-- General awareness of Azure OpenAI concepts
-- Readiness to work from a pre-existing codebase instead of creating a new application from scratch
+Participants should have:
 
-## Sign in to Azure
-Use the lab-provided credentials to sign in to the Azure portal.
-
-1. Open a browser on the lab VM and go to <https://portal.azure.com>.
-2. Sign in with the following credentials:
-   - Username: <inject key="AzureAdUserEmail"></inject>
-   - Password: <inject key="AzureAdUserPassword"></inject>
-3. If prompted to choose a tenant or subscription context, use:
-   - Subscription: <inject key="SubscriptionID"></inject>
-   - Tenant: <inject key="TenantID"></inject>
-4. Keep the portal open for later exercises where you review Azure resources and configuration.
-
-> [!Note]
-> This lab uses an Azure lab environment. The Azure CLI sign-in flow in later exercises is based on `az login`, which opens a browser or falls back to device code flow according to Azure CLI behavior documented on Microsoft Learn.
-
-## Prepared lab environment
-The VM for this lab is already prepared for hands-on work.
-
-- The project repository is preloaded on the lab machine.
-- Python and `uv` are available for dependency management and execution.
-- Git is available so you can inspect the repository state if needed.
-- The workspace is intended for running the demos, tests, server mode, and UI flows described in the repo and TOC.
-
-Use your deployment identifier when requested by the lab support flow:
-
-- **Deployment ID: <inject key="DeploymentID" enableCopy="false"/>**
-
-> [!Important]
-> This lab guide assumes the repository and sample environment configuration have already been staged onto the VM by the deployment/bootstrap process. If a later exercise references a specific `.env` file or repo path, use the location provided in that exercise.
+- An active **Microsoft Azure subscription** with access to Azure OpenAI and Azure Cosmos DB resources pre-provisioned by the organization.
+- **Python 3.13+** installed on the lab VM.
+- **Visual Studio Code** with the Python and Jupyter extensions.
+- **Basic Python knowledge** including async/await patterns, working with environment variables, and running scripts from the command line using `uv`.
+- **Familiarity with Azure OpenAI** — knowing the difference between a deployment name and a model name, and how to find endpoint and key values in the Azure Portal.
+- No prior Agent Memory experience required — the lab introduces all framework concepts from scratch.
 
 ## Architecture
-The lab architecture mirrors the supplied repository and the documented learning path.
 
-```mermaid
-flowchart LR
-    A[Learner on Azure Lab VM] --> B[Preloaded GitHub Repository]
-    B --> C[demo folder]
-    B --> D[memory and agent folders]
-    B --> E[server and client folders]
-    B --> F[tests and infra folders]
-    C --> G[SQLite local demos]
-    D --> H[Agent Memory orchestration]
-    H --> I[Azure OpenAI configuration]
-    H --> J[Microsoft Agent Framework integration]
-    E --> K[FastAPI server mode]
-    E --> L[Streamlit UI]
-    H --> M[Azure Cosmos DB backend]
-```
+## Architecture Diagram
 
 ### Components explained
 - **Azure lab VM**: your working environment for the entire lab.
@@ -93,52 +47,90 @@ flowchart LR
 - **Azure OpenAI configuration**: supports the model-driven memory processing used by the repo.
 - **Streamlit and FastAPI**: provide live interaction patterns for service-mode exploration.
 
-## How to approach the lab
-To get the most value from the exercises:
+# Getting Started with Lab
 
-1. Start by orienting yourself to the repository structure before changing any settings.
-2. Run the demos in order because each exercise builds on concepts introduced earlier.
-3. Compare outputs carefully, especially when you move from SQLite to Cosmos DB or from direct memory usage to framework integration.
-4. Keep notes on which files define configuration, hooks, and backend choices.
-5. Use the Azure portal and terminal together when troubleshooting environment or resource-related issues.
+Welcome to the Modern Identity Governance & Secure Access with Microsoft Entra Workshop!. Let's begin by making the most of this experience:
 
-## What you will do in the 7 exercises
-### Exercise 1: Environment Setup & Local Memory
-You will verify the installed tools, review environment variables, install dependencies with `uv`, and run `demo/01_basic_memory.py` to understand local memory behavior.
+## Accessing Your Lab Environment
 
-### Exercise 2: Agent Framework Integration
-You will inspect `demo/02_agent_framework.py`, identify `context_providers=[memory]`, review hook usage, and compare that pattern with `demo/03_agent_driven.py` and `demo/06_insight_curation.py`.
+Once you are ready to dive in, your virtual machine and guide will be right at your fingertips within your web browser.
+ 
+![Access Your VM and Lab Guide](./Images/env.png)
 
-### Exercise 3: Azure Cosmos DB Backend
-You will review backend options, run the Cosmos DB demo, confirm persistence behavior, and compare backend trade-offs.
+## Lab Guide Zoom In/Zoom Out
 
-### Exercise 4: Bounded Long-Term Memory & Insight Curation
-You will compare bounded itemized insights with more synthesized long-term memory behavior using the supplied demos.
+To adjust the zoom level for the environment page, click the **A↕ : 100%** icon located next to the timer in the lab environment.
 
-### Exercise 5: Live Server Mode & Streamlit UI
-You will start the FastAPI service, check the `/health` endpoint, run the terminal-based server mode demo, and launch the Streamlit UI.
+![](./Images/GS2.png)
 
-### Exercise 6: Validation, Testing & Troubleshooting
-You will run tests and validation checks, then work through common setup and configuration troubleshooting scenarios.
+## Virtual Machine & Guide
+ 
+Your virtual machine is your workhorse throughout the workshop. The guide is your roadmap to success.
+ 
+## Exploring Your Lab Resources
+ 
+To get a better understanding of your lab resources and credentials, navigate to the **Environment** tab.
+ 
+![Explore Lab Resources](./Images/envtab_newUI.png)
+ 
+## Utilizing the Split Window Feature
+ 
+For convenience, you can open the guide in a separate window by selecting the **Split Window** button from the top right corner.
+ 
+![Use the Split Window Feature](./Images/GS4.png)
+ 
+## Managing Your Virtual Machine
+ 
+Feel free to **start, stop, or restart (2)** your virtual machine as needed from the **Resources (1)** tab. Your experience is in your hands!
+ 
+![Manage Your Virtual Machine](./Images/GS5.png)	
 
-### Exercise 7: Production Hardening & Architecture Review
-You will review production-focused concerns such as authentication, infrastructure, and how the repo would be adapted for more robust deployment patterns.
+## Lab Validation
 
-## Before you continue
-Before moving to Exercise 1, make sure you can answer yes to all of the following:
+After completing the task, hit the **Validate** button under the Validation tab integrated within your lab guide. If you receive a success message, you can proceed to the next task; if not, carefully read the error message and retry the step, following the instructions in the lab guide.
 
-- You have signed in to Azure with <inject key="AzureAdUserEmail"></inject>.
-- You know your subscription is <inject key="SubscriptionID"></inject>.
-- You know your tenant is <inject key="TenantID"></inject>.
-- You understand that the repo is preloaded on the VM and will be explored in the next exercise.
-- You are ready to use the deployment reference **<inject key="DeploymentID" enableCopy="false"/>** if support or troubleshooting steps require it.
+   ![Inline Validation](./Images/validation.png)
+ 
+Now you're all set to explore the powerful world of technology. Feel free to reach out if you have any questions along the way. 
 
-## Summary
-In this Getting Started page, you reviewed the scenario, confirmed the Azure sign-in details, understood the prepared VM-based environment, and saw how the seven exercises progress from local SQLite-backed memory to cloud persistence, server mode, testing, and production review. You are now ready to begin the first hands-on exercise and verify the development environment inside the preloaded repository.
+## Let's Get Started with Azure Portal
+ 
+1. On your virtual machine, click on the Azure Portal icon as shown below:
+ 
+    ![Launch Azure Portal](./Images/Azureportal.png)
+ 
+2. You'll see the **Sign into Microsoft Azure** tab. Here, enter your credentials **(1)** and click **Next (2)**.
+ 
+   - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
+ 
+    ![Enter Your Username](./Images/GS6.png)
+ 
+3. Next, provide your temporary password **(1)** and select **Sign in (2)**.
+ 
+   - **Temporary Access Pass:** <inject key="AzureAdUserPassword"></inject>
+ 
+      ![Enter Your Password](./Images/GS6-1.png)
+ 
+4. If prompted to stay signed in, you can click **No**.
 
-## After publishing
+   ![](./Images/GS7.png)
+ 
+   
+Now you're all set to explore the powerful world of technology. Feel free to reach out if you have any questions along the way. Enjoy your workshop!
 
-> [!Note] These steps run **after** you push the template to CloudLabs — they verify CloudLabs can actually serve this lab guide to candidates.
+## Support Contact
 
-- **Verify docs-proxy access:** open Templates → your template → **Lab Guide Settings** in <https://admin.cloudlabs.ai> and confirm CloudLabs can reach this repo via the docs proxy. If the repo is private, configure GitHub access at the template level.
-- **Verify inline questions and inline validations:** sign in to <https://admin.cloudlabs.ai>, open your template, and walk through one full lab run to confirm every `<question>` and `<validation step="..."/>` renders correctly. Fix any that don't resolve.
+The CloudLabs support team is available 24/7, 365 days a year, via email and live chat to ensure seamless assistance at any time. We offer dedicated support channels tailored specifically for both learners and instructors, ensuring that all your needs are promptly and efficiently addressed.
+
+Learner Support Contacts:
+
+* Email Support: cloudlabs-support@spektrasystems.com 
+* Live Chat Support: https://cloudlabs.ai/labs-support
+
+Now, click on Next from the lower right corner to move on to the next page.
+
+   ![](./Images/Nextpage.png)
+
+### Happy Learning!!
+
+
