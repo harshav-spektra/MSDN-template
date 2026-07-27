@@ -103,7 +103,7 @@ Now you're all set to explore the powerful world of technology. Feel free to rea
  
 2. You'll see the **Sign into Microsoft Azure** tab. Here, enter your credentials **(1)** and click **Next (2)**.
  
-   - **Email/Username:** <inject key="AzureAdUserEmail"></inject>
+   - **Email/Username:** <inject key="azureUserName"></inject>
  
     ![Enter Your Username](./Images/a9.png)
  
