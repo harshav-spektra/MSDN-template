@@ -29,7 +29,7 @@ In this exercise, you will perform:
 - Task 2: Run the Cosmos DB Demo
 - Task 3: Verify Data Persisted in Cosmos DB
 - Task 4: Run Itemized Insights with Cosmos DB
-- Task 5: Concept Check — Backend Selection Trade-offs
+- Task 5: Backend Selection Trade-offs (Read- Only)
 
 ---
 
@@ -101,9 +101,9 @@ You used `sqlite` in Exercises 1 and 2. In this exercise you switch to `cosmosdb
 
 In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel, and execute each cell while understanding exactly what each one does. This notebook runs the same three-session financial advisor scenario from Exercise 2, but now all memory is stored in Azure Cosmos DB instead of a local SQLite file.
 
-1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** and open the **04_cosmosdb.ipynb (2)** notebook.
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **04_cosmosdb.ipynb (2)** notebook.
 
-   ![](./Images/ETS321.png)
+   ![](./Images/ETS315.png)
 
 1. Take a moment to read the first markdown cell, **"Demo 4: Financial Advisor with CosmosDB Backend"**. It lists four things this notebook demonstrates:
 
@@ -116,11 +116,13 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    It also lists the required environment variables — confirm these match what you verified in Task 3.1.
 
-1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
+1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.12.X)(Python 3.12.X) (2)** if prompted.
 
-   ![](./Images/ETS323.png)
+   ![](./Images/ETS328.png)
 
 1. Run the first code cell (**Cell 1 — Imports and Environment Setup**). This cell:
+
+   ![](./Images/ETS329.png)
 
    - **Imports all required libraries**: `asyncio`, `os`, `sys`, `pathlib`, and `dotenv` for loading the `.env` file.
    - **Fixes text encoding** — ensures emoji and special characters print cleanly in the terminal (`sys.stdout.reconfigure`).
@@ -131,7 +133,11 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    You should see: `Imports and environment setup complete.`
 
+   ![](./Images/ETS3210.png)
+
 1. Run the second code cell (**Cell 2 — Tools and Session Runner**). This cell:
+
+   ![](./Images/ETS3211.png)
 
    - **Defines two financial tools** the agent can call:
      - `get_401k_limit(year)` — returns the 401k contribution limit for a given year (e.g., `"$23,500 (under 50), $31,000 (50+)"` for 2025).
@@ -147,11 +153,13 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    On Session 1, this will print a small number of characters (no prior history). On Sessions 2 and 3, you will see a larger number — that is Sarah's profile being loaded from Cosmos DB automatically.
 
-   You should see: `Tools and session runner are ready.`
+   You should see: `Tools, session runner, and Cosmos memory client are ready.`
 
-1. Read the markdown cell **"Cell 4: Detailed Execution Plan"** — it describes what the main cell will do step by step before you run it, so you know what to expect.
+   ![](./Images/ETS3212-1.png)
 
 1. Run the final code cell (**Cell 4 — Main Demo**). This is the cell that actually connects to Cosmos DB and runs the full scenario. Watch the output section by section:
+
+   ![](./Images/ETS3213.png)
 
    **Connection check:**
    - The cell first checks for `COSMOS_ENDPOINT` or `COSMOS_CONNECTION_STRING`. If neither is found, it prints an error and stops — go back to your `.env` file if this happens.
@@ -190,69 +198,73 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    You should see the output ending with a cleanup confirmation.
 
+   ![](./Images/ETS3214.png)
+
    > **Note:** If the cell fails with a `CosmosDB connection error` or `authentication error`, verify your `COSMOS_ENDPOINT` and `COSMOS_KEY` values in `.env`, save the file, restart the kernel, and re-run all cells from the top.
-
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
 
 ## Task 3: Verify Data Persisted in Cosmos DB
 
 In this task, you will confirm that the data written in Task 3.2 actually exists in your Azure Cosmos DB account by browsing the containers in Data Explorer, inspecting a stored JSON item, and verifying that memory survives a full kernel restart.
 
-### Why does this matter?
+1. Return to your browser and In the search bar at the top of the Azure Portal, search for **Azure Cosmos DB (1)** and select **Azure Cosmos DB (2)**.
 
-With SQLite, you can check persistence by opening the `.db` file on your local machine. With Cosmos DB, persistence lives in the cloud — the only way to see it directly is through the Azure Portal's **Data Explorer** or the Cosmos DB SDK. This task makes the persistence tangible: you will see the actual JSON documents the notebook wrote.
+   ![](./Images/ETS311.png)
 
-1. Return to your browser and navigate to the **Azure Cosmos DB** account you opened in Task 3.1.
+1. Select the **cosmos-<inject key="Deployment ID" enableCopy="false"></inject>**
 
-1. From the left navigation pane, select **Data Explorer (1)**.
+   ![](./Images/ETS312.png)
 
-1. In the Data Explorer, expand the **agent_memory_db (1)** database node. If you do not see it, click **Refresh** — it may take a few seconds after the notebook run to appear.
+1. From the left navigation pane, select **Data Explorer**.
 
-1. Inside **agent_memory_db**, expand each container to see what the demo created. You should find containers similar to the following:
+   ![](./Images/ETS332.png)
+
+1. In the Data Explorer, expand the **agent_memory_db** database node. Inside **agent_memory_db**, expand each container to see what the demo created. You should find containers similar to the following:
 
    - **interactions** — the raw conversation turns (Sarah's questions and the advisor's answers).
    - **session_summaries** — the auto-generated summaries produced at the end of each session.
    - **insights** — the durable facts extracted about Sarah (risk tolerance, income, retirement timeline, etc.).
+
+   ![](./Images/ETS333.png)
 
 1. Click on the **interactions (1)** container to expand it, then click **Items (2)** underneath it.
 
 1. Click on any item in the list to open its **JSON document (3)** in the right pane. Verify that:
 
    - The `user_id` field shows `"sarah_demo_cosmos"` — matching the `USER_ID` set in the notebook.
-   - The document contains the actual conversation text from Task 3.2.
+   - The document contains the actual conversation text from Task 2.
+
+   ![](./Images/ETS335.png)
 
    > **Note:** In Azure Cosmos DB for NoSQL, every piece of data is stored as a JSON document inside a **container** (similar to a table in SQL, but schema-free). Each document has a unique `id` and a `partition key` — in this project, the partition key is the `user_id`, which means all of Sarah's data is grouped together for efficient retrieval.
 
 1. Click on the **insights (1)** container → **Items (2)** and open one of the insight documents. Confirm it contains a fact extracted from the conversation — for example, Sarah's risk tolerance or income level.
 
+   ![](./Images/ETS335.png)
+
 1. Now verify **cross-run persistence** — this is the most important part. Return to Visual Studio Code, and **restart the notebook kernel** by clicking the **Restart** button in the notebook toolbar.
 
-1. Run only the first two cells again (Cell 1 — imports/setup, Cell 2 — tools/session runner) to reinitialize the environment. Do **not** run the main demo cell yet.
+   ![](./Images/ETS337.png)
 
-1. Open a new notebook code cell at the bottom and run the following snippet to confirm prior data is accessible immediately after a fresh kernel start:
+1. Run only the first two cells again (Cell 1 — imports and Environment, Cell 2 — tools and sessions) to reinitialize the environment. Do **not** run the **Cell 4: Detailed Execution Plan**.
+
+1. Click on  **+code** above **Cell 4: Detailed Execution Plan** and run the following snippet to confirm prior data is accessible immediately after a fresh kernel start:
+
+   ![](./Images/ETS339.png)
+
+1. Add the following code snippet **(1)** then click the **Run Cell** button **(2)**.
 
    ```python
    result = await memory.search("What is Sarah's risk tolerance?")
    print(result)
    ```
 
-   Confirm the answer references Sarah's moderate-to-high risk profile from Session 1 — even though this is a brand-new kernel process that has never run the demo sessions. The data is coming from Cosmos DB, not from any in-memory state.
+   ![](./Images/ETS3310.png)
+
+1. Review the output **(3)** and verify that it returns Sarah's **moderate-to-high risk tolerance** from **Session 1**. This confirms that Agent Memory successfully retrieves persisted data from **Azure Cosmos DB**, even after starting a new kernel with no in-memory conversation state.
 
    > **Note:** This is the key difference from SQLite: with SQLite, persistence is local to the machine. With Cosmos DB, a completely separate application running anywhere — a web API, a mobile app, another engineer's laptop — would get the same answer from the same data.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 3.4: Run Itemized Insights with Cosmos DB
+## Task 4: Run Itemized Insights with Cosmos DB
 
 In this task, you will run the `09_itemized_insights_cosmos.ipynb` notebook. This notebook introduces a more advanced memory concept: **bounded long-term memory** — a system where the agent can only keep a fixed number of insights at any time, and older or less-used insights are automatically removed to make room for newer, more relevant ones.
 
@@ -266,16 +278,17 @@ Imagine an agent that has been talking to a user for two years. If every insight
 
 This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS = 5`, and shows how the insight table evolves over time.
 
-1. In the Explorer pane, open the **09_itemized_insights_cosmos.ipynb** notebook and select the same kernel as before.
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **09_itemized_insights_cosmos.ipynb (2)**.
 
-1. Read the first markdown cell, **"Long-Term Memory Prioritization Demo (CosmosDB)"**. It introduces the four key concepts:
+   ![](./Images/ETS331.png)
 
-   - **Recency** — newer insights receive a temporary priority boost.
-   - **Frequency** — cited/reused insights grow stronger over time.
-   - **Forgetting** — old unused insights decay.
-   - **Bounded memory** — only the top `MAX_INSIGHTS` (5) insights are retained at any time.
+1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.12.X)(Python 3.12.X) (2)** if prompted.
+
+   ![](./Images/ETS342.png)
 
 1. Run the first code cell (**Cell 1 — Imports, Config, and Timeline**). This cell:
+
+   ![](./Images/ETS345.png)
 
    - **Loads your `.env` file** and resolves the project root.
    - **Imports the low-level Cosmos DB classes** directly — `CosmosDBDatabase`, `Reflection`, `LongTermInsightItem`, `rank_insights`, `calculate_retention_score`. Unlike the previous notebook, this demo bypasses the `AgentMemory` wrapper and works directly with the database and reflection engine to give you full visibility into the scoring system.
@@ -288,18 +301,24 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
 
    You should see: `[Setup complete]` or equivalent output.
 
+   ![](./Images/ETS343.png)
+
 1. Run the second code cell (**Cell 2 — Helper Functions**). This cell defines the utility functions the main demo uses:
+
+   ![](./Images/ETS344.png)
 
    - **`print_insight_table(items, now, title)`** — prints a formatted table of current insights showing their `ID`, `Score` (retention score), `Access` count (how many times they have been cited), `Age`, `Importance`, and the first 38 characters of the insight text. You will see this table printed before and after every session in the main run.
    - **`get_insight_items(db, user_id)`** — queries Cosmos DB for all stored long-term insight items for the user.
    - **`cleanup_demo_data(db, user_id)`** — deletes all existing insights for the demo user so each run starts clean.
    - **`prune_insights(db, user_id, items, max_items, now)`** — the core **bounded memory function**: ranks all insights by their retention score and deletes any beyond `MAX_INSIGHTS`. Pruned items are permanently removed from Cosmos DB.
 
-   You should see: no output (this cell only defines functions, it does not run anything yet).
+   You should see output as: `Helper functions are ready`
 
-1. Read the markdown cell **"Cell 4: What Happens During Execution"** — it walks through the five steps of the main run before you execute it. Read all five steps so you understand what you are about to see.
+      ![](./Images/ETS346.png)
 
 1. Run the final code cell (**Cell 4 — Main Demo**). Watch the output section by section — it is long, but each section tells a clear story:
+
+   ![](./Images/ETS328.png)
 
    **Connection:**
    - The cell connects to Cosmos DB using your credentials and calls `cleanup_demo_data()` to delete any prior insights for this demo user — ensuring a clean run.
@@ -333,21 +352,18 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
    - Insights that were repeatedly referenced (like the Roth IRA) have high `access_count` scores and remain.
    - The agent's memory is now a curated, scored representation of what matters most about Alex — not a raw dump of everything that was ever said.
 
+      ![](./Images/ETS328.png)
+
 1. After the main run completes, return to the **Azure Portal Data Explorer** and refresh the **insights** container. Confirm that exactly **5** (or fewer) insight documents exist for `user_id = "memory_priority_demo_cosmos"` — the pruning was real, not just simulated.
+
+   ![](./Images/ETS328.png)
 
 1. Compare the two notebooks by verifying the following differences in the output:
 
    - **`04_cosmosdb.ipynb`** — insights accumulate without a cap. The `get_insights()` call at the end shows every insight extracted across all sessions.
    - **`09_itemized_insights_cosmos.ipynb`** — the insight count never exceeds `MAX_INSIGHTS = 5`. Older, less-referenced insights are physically deleted from Cosmos DB.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 3.5: Concept Check — Backend Selection Trade-offs
+## Task 5: Backend Selection Trade-offs (Read- Only)
 
 In this task, you will verify the four supported backends in the project's codebase, review a complete comparison table, and confirm why Cosmos DB is the right intermediate step between a local prototype and a production deployment.
 
@@ -395,13 +411,6 @@ Review the following table. Verify each row against your direct experience from 
    - Your agent code, memory logic, session management, and insight curation all continue working unchanged.
 
 1. Confirm this by locating the SQLite initialization from Exercise 1's notebook (**01_basic_memory.ipynb**, Cell 2) alongside the Cosmos DB initialization in this exercise — place them side by side in split view (**right-click the tab → Split Right**) and verify that the only difference is the `db_type` argument and the Cosmos DB connection string.
-
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
 
 ## 🧾 Summary
 

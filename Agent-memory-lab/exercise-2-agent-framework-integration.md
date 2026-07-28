@@ -31,7 +31,7 @@ In this exercise, you will perform:
 
 In this task, you will open the Agent Framework notebook and inspect how `AgentMemory` is registered as a context provider inside the Agent Framework, identifying the lifecycle hooks that make memory automatic.
 
-1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** and open the **02_agent_framework.ipynb (2)** notebook.
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **02_agent_framework.ipynb (2)** notebook.
 
    ![](./Images/ETS211.png)
 
@@ -76,7 +76,7 @@ In this task, you will open the Agent Framework notebook and inspect how `AgentM
 
 In this task, you will execute the Agent Framework notebook and observe how memory from one session automatically influences later sessions, with no manual memory calls anywhere in the conversation code.
 
-1. In the **02_agent_framework_condensed.ipynb** notebook, click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
+1. In the **02_agent_framework.ipynb** notebook, click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.12.X)(Python 3.12.X) (2)** if prompted.
 
    ![](./Images/ETS213.png)
 
@@ -106,43 +106,59 @@ In this task, you will execute the Agent Framework notebook and observe how memo
    - **Session 3 (Tax Planning):** the user asks about tax optimization *"given my income and the retirement accounts we discussed"* — the agent uses knowledge accumulated across both earlier sessions.
    - After each session ends, note the `💡 Insights extracted` count — ending a session triggers reflection and profile updates automatically.
 
+   ![](./Images/ETS224.png)
+
 1. Verify that Session 2 and Session 3 reference information established earlier (age, income, risk tolerance, time horizon) rather than behaving like a stateless first-time conversation.
 
 1. Locate at least two concrete examples of recalled information in the output:
 
    - In the **Session 2** output, find the agent referencing Sarah's **risk tolerance** or **30-year time horizon** (stated only in Session 1) when recommending an asset allocation.
+
+   ![](./Images/ETS225.png)
+
    - In the **Session 3** output, find the agent referencing Sarah's **$150,000 income** or the **retirement accounts discussed earlier** when giving tax optimization advice.
 
-   > **Tip:** If the output scrolls too quickly, copy the console output to a text file or use your terminal scrollback so you can compare Session 1 and Session 2 side by side.
+   ![](./Images/ETS226.png)
+
+   >**Note**: To verify the complete output block, scroll down to the end of the output and click on **scrollable element**.
 
 1. Run the final code cell (**Step 9–10: Inspect Memory & Cleanup**). This cell verifies what was stored:
+
+   ![](./Images/ETS227.png)   
 
    - **Memory search test** — runs `memory.search("What is Sarah's risk tolerance?")` and prints the semantically retrieved answer.
    - **Sessions list** — `memory.get_sessions()` should show all three sessions with their generated summaries.
    - **Extracted insights** — `memory.get_insights()` prints what the system learned about Sarah, each with a category and confidence score.
    - **Cleanup** — closes the memory connection and deletes the demo database.
 
-1. Confirm in the final output that the pattern held end to end: three sessions recorded, insights extracted for Sarah's demographics, risk tolerance, and goals — all without a single manual `add_turn()`, `store_response()`, or `get_context()` call in the conversation code. This is why the pattern suits scenarios like a financial advisor, where preferences, goals, and risk posture must persist across many interactions automatically.
+   ![](./Images/ETS228.png)    
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
+1. Confirm in the final output that the pattern held end to end: three sessions recorded, insights extracted for Sarah's demographics, risk tolerance, and goals — all without a single manual `add_turn()`, `store_response()`, or `get_context()` call in the conversation code. This is why the pattern suits scenarios like a financial advisor, where preferences, goals, and risk posture must persist across many interactions automatically.
 
 ## Task 3: Compare Agent-Driven Memory Retrieval
 
 In this task, you will run the agent-driven notebook, where automatic context injection is disabled and the agent must explicitly decide when to search memory — and observe a safety-critical scenario that tests whether it does.
 
-1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** open the **03_agent_driven.ipynb (2)** notebook 
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **03_agent_driven.ipynb (2)** notebook 
 
-   ![](./Images/ETS2211.png)
+   ![](./Images/ETS231.png)
 
 1. Read the first markdown cell, **"Agent-Driven Memory Demo"**. It contrasts the two approaches directly:
 
    - **Managed context (previous notebook):** the system automatically decides when to search; the agent passively receives pre-enriched context.
    - **Agent-driven (this notebook):** the agent has explicit memory tools and decides for itself when to call them — making memory access transparent, auditable, and reasoned.
 
-1. Run the first code cell (**Step 1: Setup, Imports & Configuration**). Note the one critical difference from the previous notebook:
+   ![](./Images/ETS232.png)
+
+1. In the **03_agent_driven.ipynb** notebook, click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.12.X)(Python 3.12.X) (2)** if prompted.
+
+   ![](./Images/ETS233.png)
+
+1. Run the first code cell (**Step 1: Setup, Imports & Configuration**).
+
+   ![](./Images/ETS234.png)
+
+1. Note the one critical difference from the previous notebook:
 
    ```
    config = AgentMemoryConfig(
@@ -152,25 +168,47 @@ In this task, you will run the agent-driven notebook, where automatic context in
    )
    ```
 
+      ![](./Images/ETS236.png)
+
    **`auto_enrich_context=False`** — automatic injection is disabled. The agent will only see past information if it explicitly searches for it. This cell also sets `USER_ID = "patient_demo"` and creates the `demo_agent_driven_memory.db` database.
 
+   You should see the output ending with: `✅ Step 1 Complete: Environment configured`
+
+   ![](./Images/ETS235.png)   
+
 1. Run the next code cell (**Step 2: Create Memory Tools & Agent**). This cell gives the agent its explicit memory tools:
+
+   ![](./Images/ETS237.png)
 
    - **`search_memory(query)`** — searches the patient's history across interactions, insights, and summaries. Its tool description instructs the agent: *"CRITICAL: Always search before prescribing medications or making recommendations!"*
    - **`get_patient_profile()`** — retrieves the synthesized patient profile built from all past sessions.
    - The agent is then created with `tools=[search_memory, get_patient_profile]` — and **no** `context_providers`.
 
-1. Read the next markdown cell, **"Step 3: Run Three-Session Medical Demo"** — it explains the critical test you are about to observe.
+   You should see the output ending with: `✅ Step 2 Complete: Agent ready with memory control`
+
+   ![](./Images/ETS239.png)
 
 1. Run the next code cell (**Step 3: Run Three-Session Medical Demo**). Watch each session carefully:
+
+   ![](./Images/ETS238.png)
 
    - **Session 1 (Initial Consultation):** the patient discloses a **severe penicillin allergy with anaphylaxis history**. The system stores this.
    - **Session 2 (Routine Follow-up):** a simple blood pressure check — the allergy is not mentioned, and a memory search is optional here.
    - **Session 3 (THE CRITICAL TEST):** the patient says *"I have a really bad sinus infection. I think I need antibiotics."* — **without mentioning the allergy**. Watch the output for a `🔍 [Agent Tool] search_memory(...)` line: the agent must proactively decide to search memory for allergies before recommending any antibiotic.
 
+   ![](./Images/ETS2310.png)   
+
 1. Verify in the Session 3 output that the agent invoked `search_memory` and that its response accounts for the penicillin allergy from Session 1.
 
-1. Run the final code cell (**Step 4: Inspect Final Memory State & Summary**). This cell prints the extracted insights (the allergy should appear with its category and confidence), the three recorded sessions with summaries, a semantic search test for `"patient allergies medications"`, and then cleans up the database.
+   ![](./Images/ETS2312.png)   
+
+1. Run the final code cell (**Step 4: Inspect Final Memory State & Summary**). 
+
+   ![](./Images/ETS2313.png) 
+
+1. This cell prints the extracted insights (the allergy should appear with its category and confidence), the three recorded sessions with summaries, a semantic search test for `"patient allergies medications"`, and then cleans up the database.
+
+   ![](./Images/ETS2314.png) 
 
 1. Compare the two notebooks side by side by locating the concrete evidence of each pattern:
 
@@ -191,7 +229,7 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
 In this task, you will run the insight curation notebook and observe how repeated sessions evolve into durable user understanding — including how the system resolves outright contradictions between sessions instead of blindly accumulating them.
 
-1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** open the **06_insight_curation.ipynb (2)** notebook
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **06_insight_curation.ipynb (2)** notebook
 
    ![](./Images/ETS2311.png)
 
@@ -254,7 +292,7 @@ In this task, you will run the insight curation notebook and observe how repeate
 
 In this exercise, you accomplished the following:
 
-- Opened the `02_agent_framework_condensed.ipynb` notebook and inspected the Agent Framework integration, identifying `context_providers=[memory]` and the `before_run()`/`after_run()` lifecycle hooks
+- Opened the `02_agent_framework.ipynb` notebook and inspected the Agent Framework integration, identifying `context_providers=[memory]` and the `before_run()`/`after_run()` lifecycle hooks
 - Ran the three-session financial advisor demo and verified automatic cross-session recall of Sarah's profile (age, income, risk tolerance, time horizon) with zero manual memory calls
 - Ran the agent-driven notebook with `auto_enrich_context=False`, observed the agent explicitly invoking the `search_memory` tool, and validated the safety-critical scenario where the agent recalled a penicillin allergy before an antibiotic recommendation
 - Compared the framework-managed and agent-driven patterns across convenience, transparency, debuggability, and best-fit scenarios
