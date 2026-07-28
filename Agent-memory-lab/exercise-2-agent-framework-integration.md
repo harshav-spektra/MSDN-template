@@ -43,14 +43,16 @@ In this task, you will open the Agent Framework notebook and inspect how `AgentM
    - **Automatic context injection** — `before_run()` is called automatically when the agent processes a query, loading previous conversation context and the long-term profile.
    - **Automatic turn capture** — `after_run()` is called automatically after the agent responds, storing the new turn back into memory.
 
-1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
-
-   ![](./Images/ETS213.png)
-
 1. Scroll to the first code cell (**Step 1–6: Setup, Configuration & Agent Initialization**) and read it without running it yet. Locate the following integration points:
 
    - The **environment validation block**, which checks `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_REASONING_MODEL`, and `AZURE_OPENAI_EMB_DEPLOYMENT`.
+
+      ![](./Images/ETS214.png)
+
    - The **AgentMemoryConfig** block — note `auto_enrich_context=True` (automatic context injection is ON) and the `enrichment_trigger_keywords` list (words like "remember", "previous", "last time" that signal the user is referencing the past).
+
+      ![](./Images/ETS215.png)
+      
    - The **agent construction** at the bottom of the cell — find the key line:
 
      ```
@@ -70,13 +72,17 @@ In this task, you will open the Agent Framework notebook and inspect how `AgentM
 
 1. Compare this structure with what you saw in Exercise 1. Notice that the application code is no longer manually orchestrating every retrieval step; instead, memory participates as a context provider around the agent's run lifecycle.
 
-## Task 2.2: Run the Financial Advisor Demo
+## Task 2: Run the Financial Advisor Demo
 
 In this task, you will execute the Agent Framework notebook and observe how memory from one session automatically influences later sessions, with no manual memory calls anywhere in the conversation code.
 
-1. In the **02_agent_framework_condensed.ipynb** notebook, click **Select Kernel** in the top-right corner and select the project's virtual environment, for example **.venv (Python 3.12.x)**.
+1. In the **02_agent_framework_condensed.ipynb** notebook, click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
+
+   ![](./Images/ETS213.png)
 
 1. Run the first code cell (**Step 1–6: Setup, Configuration & Agent Initialization**). This cell performs the complete initialization:
+
+   ![](./Images/ETS221.png)
 
    - **Finds the project root** and loads your `.env` file.
    - **Validates the four required environment variables** and prints a ✅/❌ status for each.
@@ -87,9 +93,13 @@ In this task, you will execute the Agent Framework notebook and observe how memo
 
    You should see the output ending with: `✅ INITIALIZATION COMPLETE - Agent ready for conversations!`
 
+      ![](./Images/ETS222.png)
+
 1. Read the next markdown cell, **"Step 7–8: Run Three-Session Demo"** — it previews what each session will demonstrate: Session 1 builds Sarah's profile, Session 2 recalls it automatically, and Session 3 uses the accumulated knowledge.
 
 1. Run the next code cell (**Step 7–8: Run Three-Session Demo**). This cell runs the full multi-session scenario:
+
+      ![](./Images/ETS223.png)
 
    - **Session 1 (Initial Consultation):** Sarah introduces herself — 35 years old, software engineer, $150,000/year, moderate-to-high risk tolerance, 30 years to retirement, employer 401k with 4% match. Watch the memory context line print `No previous memory - First session!`
    - **Session 2 (Investment Strategy):** the user asks *"Based on what we discussed before, what asset allocation do you recommend?"* — watch the `📚 Memory context loaded` line at session start: the agent receives Sarah's profile automatically before answering.
@@ -119,11 +129,13 @@ In this task, you will execute the Agent Framework notebook and observe how memo
 > - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
 > - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
 
-## Task 2.3: Compare Agent-Driven Memory Retrieval
+## Task 3: Compare Agent-Driven Memory Retrieval
 
 In this task, you will run the agent-driven notebook, where automatic context injection is disabled and the agent must explicitly decide when to search memory — and observe a safety-critical scenario that tests whether it does.
 
-1. In the Explorer pane, open the **03_agent_driven.ipynb** notebook and select the same kernel as before.
+1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** open the **03_agent_driven.ipynb (2)** notebook 
+
+   ![](./Images/ETS2211.png)
 
 1. Read the first markdown cell, **"Agent-Driven Memory Demo"**. It contrasts the two approaches directly:
 
@@ -175,11 +187,13 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
    > **Note:** The goal of this task is not to declare one pattern universally better. Instead, you are identifying when framework-managed context injection is helpful and when explicit retrieval offers better observability, safety, or control.
 
-## Task 2.4: Long-Term Insight Extraction
+## Task 4: Long-Term Insight Extraction
 
 In this task, you will run the insight curation notebook and observe how repeated sessions evolve into durable user understanding — including how the system resolves outright contradictions between sessions instead of blindly accumulating them.
 
-1. In the Explorer pane, open the **06_insight_curation.ipynb** notebook and select the same kernel.
+1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** open the **06_insight_curation.ipynb (2)** notebook
+
+   ![](./Images/ETS2311.png)
 
 1. Read the first markdown cell, **"Insight Curation Demo: Contradiction Resolution & Profile Evolution"**. It frames the core problem this notebook solves:
 

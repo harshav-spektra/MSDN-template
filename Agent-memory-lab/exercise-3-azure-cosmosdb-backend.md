@@ -25,15 +25,15 @@ In this exercise, you will:
 
 In this exercise, you will perform:
 
-- Task 3.1: Understand Backend Options
-- Task 3.2: Run the Cosmos DB Demo
-- Task 3.3: Verify Data Persisted in Cosmos DB
-- Task 3.4: Run Itemized Insights with Cosmos DB
-- Task 3.5: Concept Check — Backend Selection Trade-offs
+- Task 1: Understand Backend Options
+- Task 2: Run the Cosmos DB Demo
+- Task 3: Verify Data Persisted in Cosmos DB
+- Task 4: Run Itemized Insights with Cosmos DB
+- Task 5: Concept Check — Backend Selection Trade-offs
 
 ---
 
-## Task 3.1: Understand Backend Options
+## Task 1: Understand Backend Options
 
 In this task, you will learn what a **backend** means in Agent Memory, understand why Cosmos DB is needed for production workloads, confirm the Cosmos DB credentials in your `.env` file, and navigate to the pre-created Cosmos DB account in the Azure Portal.
 
@@ -64,68 +64,50 @@ You used `sqlite` in Exercises 1 and 2. In this exercise you switch to `cosmosdb
 
 ### Steps
 
-1. In the Explorer pane, click on the **.env** file in the project root to open it.
-
-1. Confirm the following **Azure OpenAI** variables are present and populated (you configured these in Exercise 1):
-
-   - `AZURE_OPENAI_ENDPOINT`
-   - `AZURE_OPENAI_API_KEY`
-   - `AZURE_OPENAI_REASONING_MODEL`
-   - `AZURE_OPENAI_EMB_DEPLOYMENT`
-
-1. Now look for the **Cosmos DB** variables. The notebook accepts either of these two authentication options:
-
-   **Option A — Connection String (most common in lab environments):**
-   ```
-   COSMOS_CONNECTION_STRING=AccountEndpoint=https://...
-   ```
-
-   **Option B — Endpoint + Key:**
-   ```
-   COSMOS_ENDPOINT=https://<your-account>.documents.azure.com:443/
-   COSMOS_KEY=<your-primary-key>
-   ```
-
-   > **Note:** The notebook checks for `COSMOS_CONNECTION_STRING` first, then falls back to `COSMOS_ENDPOINT`. If both are missing, the demo will exit immediately with *"CosmosDB credentials not found!"* — that is your signal to check the `.env` file.
-
 1. Open a browser on the lab VM and navigate to the Azure Portal:
 
    ```
    https://portal.azure.com
    ```
 
-1. Sign in using the lab credentials provided in the **Environment** tab.
+1. Sign in using the lab credentials provided in the **Environment** tab if prompted.
 
 1. In the search bar at the top of the Azure Portal, search for **Azure Cosmos DB (1)** and select **Azure Cosmos DB (2)** from the Services section.
 
-1. From the list, click on the pre-provisioned **Cosmos DB account** for this lab.
+   ![](./Images/ETS311.png)
 
-1. On the **Overview** pane, locate the **URI** — confirm it matches the endpoint value in your `.env` file.
+1. Select the **cosmos-<inject key="Deployment ID" enableCopy="false"></inject>**
 
-1. From the left navigation pane, select **Keys (1)** under **Settings**. Confirm the **PRIMARY KEY (2)** matches the `COSMOS_KEY` value in your `.env` file.
+   ![](./Images/ETS312.png)
 
-   > **Note:** Keys in the portal are hidden by default. Click the eye icon next to a key to reveal it for comparison.
+1. From the left navigation pane, expand **Settings (1)** and then select **Keys (2)**. Copy the **URI (3)** and paste it in Notepad
 
-1. From the left navigation pane, select **Data Explorer (1)**. At this point the explorer will likely be empty or show only a root node — that is expected. You will return here in Task 3.3 after the demo has run and written data.
+1. Now copy the **Primary Key (4)** value and paste it in Notepad.
 
-   > **Tip:** **Data Explorer** is the portal tool for browsing databases, containers (like folders), and individual JSON items stored in Cosmos DB. Think of it as a file browser for your cloud database.
+   ![](./Images/ETS313.png)
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
+   > **Note:** Keys in the portal are hidden by default. Click the eye icon next to a key to reveal it.
 
----
+1. Return to Visual Studio Code. In the Explorer pane, select `.env` **(1)** and provide the following environment variables using the values you copied to Notepad:
 
-## Task 3.2: Run the Cosmos DB Demo
+   - **COSMOS_ENDPOINT**: Repalce the endpoint value you copied in Step 5.
+   - **COSMOS_KEY**: Replace the API key you copied in Step 6.
+
+   ![](./Images/ETS314.png)
+
+1. Save the changes made to the `.env` file by pressing **CTRL + S**.
+
+## Task 2: Run the Cosmos DB Demo
 
 In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel, and execute each cell while understanding exactly what each one does. This notebook runs the same three-session financial advisor scenario from Exercise 2, but now all memory is stored in Azure Cosmos DB instead of a local SQLite file.
 
-1. Return to **Visual Studio Code**.
+1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** and open the **04_cosmosdb.ipynb (2)** notebook.
 
-1. In the Explorer pane, navigate to the **demo** folder and open the **04_cosmosdb.ipynb** notebook.
+   ![](./Images/ETS321.png)
 
 1. Take a moment to read the first markdown cell, **"Demo 4: Financial Advisor with CosmosDB Backend"**. It lists four things this notebook demonstrates:
+
+   ![](./Images/ETS322.png)
 
    - A financial advisor agent with two retirement tools
    - Conversation memory stored in **Cosmos DB**
@@ -134,7 +116,9 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    It also lists the required environment variables — confirm these match what you verified in Task 3.1.
 
-1. Click **Select Kernel (1)** in the top-right corner and select the project's virtual environment, for example **.venv (Python 3.12.x) (2)**.
+1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
+
+   ![](./Images/ETS323.png)
 
 1. Run the first code cell (**Cell 1 — Imports and Environment Setup**). This cell:
 
@@ -215,7 +199,7 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
 ---
 
-## Task 3.3: Verify Data Persisted in Cosmos DB
+## Task 3: Verify Data Persisted in Cosmos DB
 
 In this task, you will confirm that the data written in Task 3.2 actually exists in your Azure Cosmos DB account by browsing the containers in Data Explorer, inspecting a stored JSON item, and verifying that memory survives a full kernel restart.
 
