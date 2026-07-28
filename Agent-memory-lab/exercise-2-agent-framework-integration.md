@@ -22,22 +22,30 @@ You will work entirely from the prepared lab VM and the repository that was stag
 
 In this exercise, you will perform:
 
-- Task 2.1: Study the Integration Pattern
-- Task 2.2: Run the Financial Advisor Demo
-- Task 2.3: Compare Agent-Driven Memory Retrieval
-- Task 2.4: Long-Term Insight Extraction
+- Task 1: Study the Integration Pattern
+- Task 2: Run the Financial Advisor Demo
+- Task 3: Compare Agent-Driven Memory Retrieval
+- Task 4: Long-Term Insight Extraction
 
-## Task 2.1: Study the Integration Pattern
+## Task 1: Study the Integration Pattern
 
 In this task, you will open the Agent Framework notebook and inspect how `AgentMemory` is registered as a context provider inside the Agent Framework, identifying the lifecycle hooks that make memory automatic.
 
-1. In the Explorer pane, navigate to the **demo** folder and open the **02_agent_framework_condensed.ipynb** notebook.
+1. In the Explorer pane, navigate to the **demo** folder, expand **notebooks (1)** and open the **02_agent_framework.ipynb (2)** notebook.
+
+   ![](./Images/ETS211.png)
 
 1. Take a moment to read the first markdown cell, **"Agent Framework + AgentMemory Integration"**. It introduces the three key concepts you will observe in this exercise:
+
+   ![](./Images/ETS212.png)
 
    - **ContextProvider pattern** — memory is passed as `context_providers=[memory]` to the Agent, so no manual `add_turn()` or `store_response()` calls are needed.
    - **Automatic context injection** — `before_run()` is called automatically when the agent processes a query, loading previous conversation context and the long-term profile.
    - **Automatic turn capture** — `after_run()` is called automatically after the agent responds, storing the new turn back into memory.
+
+1. Click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.14.6)(Python 3.14.6) (2)** if prompted.
+
+   ![](./Images/ETS213.png)
 
 1. Scroll to the first code cell (**Step 1–6: Setup, Configuration & Agent Initialization**) and read it without running it yet. Locate the following integration points:
 

@@ -40,7 +40,7 @@ In this task, you will confirm that Python, uv, and Git are installed at the req
 
    ![](./Images/ETS113.png)
 
-1. Navigate to `C:\LabFiles` **(1)**, select the **azure-ai-agents-labs (2)** folder and then click **Select Folder (3)**.
+1. Navigate to `C:\LabFiles` **(1)**, select the **agent-memory (2)** folder and then click **Select Folder (3)**.
 
    ![](./Images/ETS114.png)
 
@@ -212,7 +212,7 @@ In this task, you will install the project dependencies, open the `01_basic_memo
 
       ![](./Images/ETS1313.png)
 
-      >**Note**: To see the full output fo the cell, click on `Scrollable element` .
+      >**Note**: To verify the complete output block, scroll down to the end of the output and click on **scrollable element**.
 
       ![](./Images/ETS1314.png)
 
