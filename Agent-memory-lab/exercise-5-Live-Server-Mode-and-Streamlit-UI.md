@@ -2,8 +2,6 @@
 
 ### Estimated Duration: 90 Minutes
 
----
-
 ## 📘 Scenario
 
 In every previous exercise, memory logic ran **inside the same Python process** as the notebook. The notebook imported `AgentMemory`, held the database connection, and managed sessions — all in one place. That worked for learning the concepts, but it is not how real applications are built.
@@ -17,7 +15,6 @@ This is exactly what you will build and explore in this exercise.
 
 You will start the **FastAPI memory server**, confirm it is healthy, then connect **two different clients** to it: the **scripted terminal demo** and the **Streamlit browser UI**. You will watch memory build turn by turn, see insights extracted at session end, and — in the final task — type your **own prompts** into the terminal client and then switch to the browser to see those exact messages stored and reflected. That loop — type in terminal, verify in browser — is the architecture made tangible.
 
----
 
 ## 📖 Overview
 
@@ -40,19 +37,16 @@ You will start the **FastAPI memory server**, confirm it is healthy, then connec
 
 > **Key point:** Neither the terminal client nor the Streamlit UI imports `AgentMemory`. Neither holds a database connection. They are just HTTP clients. All memory logic lives exclusively in the server.
 
----
 
 ## 🎯 Objectives
 
-- Task 5.1: Start and validate the FastAPI memory server
-- Task 5.2: Run the scripted terminal demo and observe what the server records
-- Task 5.3: Launch the Streamlit UI and watch memory build turn by turn
-- Task 5.4: Verify cross-session recall — Session 2 loading Session 1's memory
-- Task 5.5: Interactive — Type your own prompts and verify them in the browser
+- Task 1: Start and validate the FastAPI memory server
+- Task 2: Run the scripted terminal demo and observe what the server records
+- Task 3: Launch the Streamlit UI and watch memory build turn by turn
+- Task 4: Verify cross-session recall — Session 2 loading Session 1's memory
+- Task 5: Interactive — Type your own prompts and verify them in the browser
 
----
-
-## Task 5.1: Start and Validate the FastAPI Memory Server
+## Task 1: Start and Validate the FastAPI Memory Server
 
 In this task, you will start the server in its own terminal and verify it is healthy before connecting any clients.
 
@@ -78,11 +72,9 @@ POST http://127.0.0.1:8000/sessions/end
 
 The client never needs to know how memory works — it only needs the server URL.
 
-### Steps
+1. Click on the **ellipsis (...) (1)** in the top menu, then select **Terminal (2)** and click **New Terminal (3)**.
 
-1. On the lab VM, launch **Visual Studio Code** and open the **agent-memory** project folder.
-
-1. Click the ellipsis **(...) (1)** in the top menu, select **Terminal (2)**, click **New Terminal (3)**. This is **Terminal 1 — the server terminal**. Leave it running for the entire exercise.
+   ![](./Images/ETS117.png)
 
 1. Start the FastAPI memory server:
 
@@ -123,14 +115,7 @@ The client never needs to know how memory works — it only needs the server URL
    - **active_sessions: 0** — no clients connected yet. This increments as clients start sessions.
    - **uptime_seconds** — how long the process has been alive.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 5.2: Run the Scripted Terminal Demo and Observe What the Server Records
+## Task 2: Run the Scripted Terminal Demo and Observe What the Server Records
 
 In this task, you will run the scripted demo — a fixed 5-turn automatic conversation — and observe the complete memory lifecycle: session start → turns stored → session end → insights extracted.
 
@@ -221,14 +206,7 @@ The script runs this conversation automatically:
 
    > Every operation was an HTTP request. `05_server_mode.py` is just an HTTP client. All memory logic ran inside `server/main.py`.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 5.3: Launch the Streamlit UI and Watch Memory Build Turn by Turn
+## Task 3: Launch the Streamlit UI and Watch Memory Build Turn by Turn
 
 In this task, you will open the Streamlit browser UI and use its playback controls to replay a scripted scenario while watching the Memory System State panel update live.
 
@@ -297,14 +275,7 @@ The Streamlit UI is a **memory visualization dashboard** — it makes the intern
 
 1. When playback completes, watch the **Insights counter** jump from 0 to a positive number (3–5). This is `end_session(trigger_reflection=True)` running — durable facts extracted, written to the database.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 5.4: Verify Cross-Session Recall — Session 2 Loading Session 1's Memory
+## Task 4: Verify Cross-Session Recall — Session 2 Loading Session 1's Memory
 
 In this task, you will prove that memory persists across separate sessions by watching Session 2 already know everything Session 1 learned — before a single new turn is processed.
 
@@ -343,14 +314,8 @@ In this task, you will prove that memory persists across separate sessions by wa
 
    > Every future session will load these summaries in its context — giving the agent a compressed relationship history, not just the most recent turns.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
 
----
-
-## Task 5.5: Interactive — Type Your Own Prompts and Verify Them in the Browser
+## Task 5: Interactive — Type Your Own Prompts and Verify Them in the Browser
 
 This is the exercise's hands-on capstone. You will run the terminal client in **interactive mode**, type your own messages as a new user, end the session, and then verify in the Streamlit browser that those exact messages were stored by the server. This closes the full loop: your input → server → database → browser.
 

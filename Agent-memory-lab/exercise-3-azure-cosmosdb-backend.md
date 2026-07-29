@@ -120,9 +120,9 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    ![](./Images/ETS328.png)
 
-1. Run the first code cell (**Cell 1 — Imports and Environment Setup**). This cell:
+1. Run the first code cell (**Cell 1: Setup, Imports & Environment Configuration**). This cell:
 
-   ![](./Images/ETS329.png)
+   ![](./Images/ETS351.png)
 
    - **Imports all required libraries**: `asyncio`, `os`, `sys`, `pathlib`, and `dotenv` for loading the `.env` file.
    - **Fixes text encoding** — ensures emoji and special characters print cleanly in the terminal (`sys.stdout.reconfigure`).
@@ -135,9 +135,9 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    ![](./Images/ETS3210.png)
 
-1. Run the second code cell (**Cell 2 — Tools and Session Runner**). This cell:
+1. Run the second code cell (**Cell 2: Tools, Session Runner & CosmosDB Memory Setup**). This cell:
 
-   ![](./Images/ETS3211.png)
+   ![](./Images/ETS352.png)
 
    - **Defines two financial tools** the agent can call:
      - `get_401k_limit(year)` — returns the 401k contribution limit for a given year (e.g., `"$23,500 (under 50), $31,000 (50+)"` for 2025).
@@ -155,11 +155,11 @@ In this task, you will open the `04_cosmosdb.ipynb` notebook, select the kernel,
 
    You should see: `Tools, session runner, and Cosmos memory client are ready.`
 
-   ![](./Images/ETS3212-1.png)
+   ![](./Images/ETS354.png)
 
-1. Run the final code cell (**Cell 4 — Main Demo**). This is the cell that actually connects to Cosmos DB and runs the full scenario. Watch the output section by section:
+1. Run the final code cell (**Cell 3: Run Three Sessions Demo with CosmosDB Memory**). This is the cell that actually connects to Cosmos DB and runs the full scenario. Watch the output section by section:
 
-   ![](./Images/ETS3213.png)
+   ![](./Images/ETS353.png)
 
    **Connection check:**
    - The cell first checks for `COSMOS_ENDPOINT` or `COSMOS_CONNECTION_STRING`. If neither is found, it prints an error and stops — go back to your `.env` file if this happens.
@@ -286,9 +286,9 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
 
    ![](./Images/ETS342.png)
 
-1. Run the first code cell (**Cell 1 — Imports, Config, and Timeline**). This cell:
+1. Run the first code cell (**Cell 1 — Environment Setup & Configuration**). This cell:
 
-   ![](./Images/ETS345.png)
+   ![](./Images/ETS3411.png)
 
    - **Loads your `.env` file** and resolves the project root.
    - **Imports the low-level Cosmos DB classes** directly — `CosmosDBDatabase`, `Reflection`, `LongTermInsightItem`, `rank_insights`, `calculate_retention_score`. Unlike the previous notebook, this demo bypasses the `AgentMemory` wrapper and works directly with the database and reflection engine to give you full visibility into the scoring system.
@@ -301,11 +301,11 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
 
    You should see: `[Setup complete]` or equivalent output.
 
-   ![](./Images/ETS343.png)
+   ![](./Images/ETS347.png)
 
-1. Run the second code cell (**Cell 2 — Helper Functions**). This cell defines the utility functions the main demo uses:
+1. Run the second code cell (**Cell 2 — Helper Functions for Insight Management**). This cell defines the utility functions the main demo uses:
 
-   ![](./Images/ETS344.png)
+   ![](./Images/ETS3410.png)
 
    - **`print_insight_table(items, now, title)`** — prints a formatted table of current insights showing their `ID`, `Score` (retention score), `Access` count (how many times they have been cited), `Age`, `Importance`, and the first 38 characters of the insight text. You will see this table printed before and after every session in the main run.
    - **`get_insight_items(db, user_id)`** — queries Cosmos DB for all stored long-term insight items for the user.
@@ -314,11 +314,11 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
 
    You should see output as: `Helper functions are ready`
 
-      ![](./Images/ETS346.png)
+      ![](./Images/ETS349.png)
 
-1. Run the final code cell (**Cell 4 — Main Demo**). Watch the output section by section — it is long, but each section tells a clear story:
+1. Run the final code cell (**Cell 3 — Execute Fll 6-Month Memory Simulation**). Watch the output section by section — it is long, but each section tells a clear story:
 
-   ![](./Images/ETS328.png)
+   ![](./Images/ETS348.png)
 
    **Connection:**
    - The cell connects to Cosmos DB using your credentials and calls `cleanup_demo_data()` to delete any prior insights for this demo user — ensuring a clean run.
@@ -352,11 +352,11 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
    - Insights that were repeatedly referenced (like the Roth IRA) have high `access_count` scores and remain.
    - The agent's memory is now a curated, scored representation of what matters most about Alex — not a raw dump of everything that was ever said.
 
-      ![](./Images/ETS328.png)
+   ![](./Images/ETS348.png)
 
 1. After the main run completes, return to the **Azure Portal Data Explorer** and refresh the **insights** container. Confirm that exactly **5** (or fewer) insight documents exist for `user_id = "memory_priority_demo_cosmos"` — the pruning was real, not just simulated.
 
-   ![](./Images/ETS328.png)
+   ![](./Images/ETS429.png)
 
 1. Compare the two notebooks by verifying the following differences in the output:
 

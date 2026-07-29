@@ -28,7 +28,7 @@ By completing this lab, participants will gain hands-on experience building, tun
 Participants should have:
 
 - An active **Microsoft Azure subscription** with access to Azure OpenAI and Azure Cosmos DB resources pre-provisioned by the organization.
-- **Python 3.13+** installed on the lab VM.
+- **Python 3.12** installed on the lab VM.
 - **Visual Studio Code** with the Python and Jupyter extensions.
 - **Basic Python knowledge** including async/await patterns, working with environment variables, and running scripts from the command line using `uv`.
 - **Familiarity with Azure OpenAI** — knowing the difference between a deployment name and a model name, and how to find endpoint and key values in the Azure Portal.
@@ -41,7 +41,7 @@ Participants should have:
 ### 🔍 Components explained
 - **Azure lab VM**: your working environment for the entire lab.
 - **Preloaded repository**: the source of all demos, configuration examples, tests, and infrastructure references used in the exercises.
-- **`demo/`**: contains the runnable learning path scripts, including local memory, framework integration, server mode, and Cosmos DB examples.
+- **`demo/`** and **`notebooks/`** : contains the runnable learning path scripts, including local memory, framework integration, server mode, and Cosmos DB examples.
 - **`memory/` and `agent/`**: contain the core memory orchestration and agent-related implementation patterns.
 - **`server/` and `client/`**: support service-based execution and interactive access patterns.
 - **SQLite**: the local starting backend used to demonstrate persistent memory behavior without requiring cloud persistence first.

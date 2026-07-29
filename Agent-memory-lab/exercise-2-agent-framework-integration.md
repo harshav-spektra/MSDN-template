@@ -37,7 +37,7 @@ In this task, you will open the Agent Framework notebook and inspect how `AgentM
 
 1. Take a moment to read the first markdown cell, **"Agent Framework + AgentMemory Integration"**. It introduces the three key concepts you will observe in this exercise:
 
-   ![](./Images/ETS212.png)
+   ![](./Images/ETS244.png)
 
    - **ContextProvider pattern** — memory is passed as `context_providers=[memory]` to the Agent, so no manual `add_turn()` or `store_response()` calls are needed.
    - **Automatic context injection** — `before_run()` is called automatically when the agent processes a query, loading previous conversation context and the long-term profile.
@@ -78,11 +78,11 @@ In this task, you will execute the Agent Framework notebook and observe how memo
 
 1. In the **02_agent_framework.ipynb** notebook, click **Select Kernel (1)** in the top-right corner and choose **agent-memory(3.12.X)(Python 3.12.X) (2)** if prompted.
 
-   ![](./Images/ETS213.png)
+   ![](./Images/ETS245.png)
 
 1. Run the first code cell (**Step 1–6: Setup, Configuration & Agent Initialization**). This cell performs the complete initialization:
 
-   ![](./Images/ETS221.png)
+   ![](./Images/ETS241.png)
 
    - **Finds the project root** and loads your `.env` file.
    - **Validates the four required environment variables** and prints a ✅/❌ status for each.
@@ -99,7 +99,7 @@ In this task, you will execute the Agent Framework notebook and observe how memo
 
 1. Run the next code cell (**Step 7–8: Run Three-Session Demo**). This cell runs the full multi-session scenario:
 
-      ![](./Images/ETS223.png)
+      ![](./Images/ETS242.png)
 
    - **Session 1 (Initial Consultation):** Sarah introduces herself — 35 years old, software engineer, $150,000/year, moderate-to-high risk tolerance, 30 years to retirement, employer 401k with 4% match. Watch the memory context line print `No previous memory - First session!`
    - **Session 2 (Investment Strategy):** the user asks *"Based on what we discussed before, what asset allocation do you recommend?"* — watch the `📚 Memory context loaded` line at session start: the agent receives Sarah's profile automatically before answering.
@@ -124,7 +124,7 @@ In this task, you will execute the Agent Framework notebook and observe how memo
 
 1. Run the final code cell (**Step 9–10: Inspect Memory & Cleanup**). This cell verifies what was stored:
 
-   ![](./Images/ETS227.png)   
+   ![](./Images/ETS243.png)   
 
    - **Memory search test** — runs `memory.search("What is Sarah's risk tolerance?")` and prints the semantically retrieved answer.
    - **Sessions list** — `memory.get_sessions()` should show all three sessions with their generated summaries.
@@ -156,7 +156,7 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
 1. Run the first code cell (**Step 1: Setup, Imports & Configuration**).
 
-   ![](./Images/ETS234.png)
+   ![](./Images/ETS246.png)
 
 1. Note the one critical difference from the previous notebook:
 
@@ -176,9 +176,9 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
    ![](./Images/ETS235.png)   
 
-1. Run the next code cell (**Step 2: Create Memory Tools & Agent**). This cell gives the agent its explicit memory tools:
+1. Run the next code cell (**Step 2: Create Memory Tools & Agent With Explicit Memory Control**). This cell gives the agent its explicit memory tools:
 
-   ![](./Images/ETS237.png)
+   ![](./Images/ETS247.png)
 
    - **`search_memory(query)`** — searches the patient's history across interactions, insights, and summaries. Its tool description instructs the agent: *"CRITICAL: Always search before prescribing medications or making recommendations!"*
    - **`get_patient_profile()`** — retrieves the synthesized patient profile built from all past sessions.
@@ -190,7 +190,7 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
 1. Run the next code cell (**Step 3: Run Three-Session Medical Demo**). Watch each session carefully:
 
-   ![](./Images/ETS238.png)
+   ![](./Images/ETS248.png)
 
    - **Session 1 (Initial Consultation):** the patient discloses a **severe penicillin allergy with anaphylaxis history**. The system stores this.
    - **Session 2 (Routine Follow-up):** a simple blood pressure check — the allergy is not mentioned, and a memory search is optional here.
@@ -202,9 +202,9 @@ In this task, you will run the agent-driven notebook, where automatic context in
 
    ![](./Images/ETS2312.png)   
 
-1. Run the final code cell (**Step 4: Inspect Final Memory State & Summary**). 
+1. Run the final code cell (**Step 4: Inspect Final Memory State & Key Learnings**). 
 
-   ![](./Images/ETS2313.png) 
+   ![](./Images/ETS249.png) 
 
 1. This cell prints the extracted insights (the allergy should appear with its category and confidence), the three recorded sessions with summaries, a semantic search test for `"patient allergies medications"`, and then cleans up the database.
 
@@ -231,15 +231,23 @@ In this task, you will run the insight curation notebook and observe how repeate
 
 1. In the Explorer pane, navigate to the  **notebooks (1)** folder and open the **06_insight_curation.ipynb (2)** notebook
 
-   ![](./Images/ETS2311.png)
+   ![](./Images/ETS411.png)
 
-1. Read the first markdown cell, **"Insight Curation Demo: Contradiction Resolution & Profile Evolution"**. It frames the core problem this notebook solves:
+1. Read the first markdown cell, **"Insight Curation Demo: Contradiction Resolution & Profile Evolution"**.
+
+   ![](./Images/ETS418.png)
+
+ It frames the core problem this notebook solves:
 
    - Session 1 stores *"User avoids stocks completely due to 2008 trauma"*.
    - Session 2 stores *"User is now aggressive — 90% stocks"*.
    - A naive system keeps both contradictory insights forever; a curated system **resolves** them into an evolution narrative: *"User WAS conservative, is NOW aggressive."*
 
-1. Run the first code cell (**Step 1: Setup, Imports & Configuration**). Note the key configuration:
+1. Run the first code cell (**Step 1: Environment Setup & Configuration**).
+
+   ![](./Images/ETS413.png)
+
+   Note the key configuration:
 
    ```
    config = AgentMemoryConfig(
@@ -250,23 +258,45 @@ In this task, you will run the insight curation notebook and observe how repeate
 
    **`longterm_synthesis_frequency=1`** — the profile is synthesized after **every** session (rather than every few sessions), which is what enables contradiction detection between Session 1 and Session 2. This cell uses `USER_ID = "evolving_user_demo"` and the `demo_insight_curation.db` database.
 
-1. Run the next code cell (**Step 2: Run Two Simulated Sessions**). This cell replays two pre-scripted sessions for a user named Alex:
+   You should see the output ending with: `✅ Step 1 Complete: Environment configured`
+
+      ![](./Images/ETS414.png)
+
+1. Run the next code cell (**Step 2: Run Two Simulated Sessions - Demonstrating Profile Evolution**). 
+
+      ![](./Images/ETS415.png)
+
+   This cell replays two pre-scripted sessions for a user named Alex:
 
    - **Session 1 (Risk-Averse Beginner):** Alex is a new graduate making $55,000, traumatized by watching his family lose money in 2008 — *"No stocks ever. Just bonds and savings accounts for me."*
    - **Session 2 (Two Years Later — the CONTRADICTION):** Alex got promoted to $120,000, has a year of expenses saved, and now wants to be *"AGGRESSIVE — 90% stocks"*, seeing market drops as *buying opportunities*.
    - Watch the output banner between the sessions explicitly warning: *"Contradiction coming in next session... System must resolve this contradiction!"* — and the Profile Evolution Summary at the end: `WAS conservative → NOW aggressive, Status: Contradiction RESOLVED by system`.
 
-1. Read the next markdown cell, **"Step 3: Run Verification Session with Real LLM"** — this is the test that proves the evolved profile is actually used, not just stored.
+   You should see the output ending with: `✅ Step 2 Complete: Profile evolution demonstrated`.
 
-1. Run the next code cell (**Step 3: Run Real LLM Verification Session**). This cell runs a genuine LLM call:
+      ![](./Images/ETS416.png)
 
+1. Read the next markdown cell, **"Step 3: Run Verification Session with Real LLM"** and run the code cell.
+
+      ![](./Images/ETS419.png)
+
+   This cell runs a genuine LLM call:
    - **The scenario:** Alex received a $10,000 bonus, and his dad is advising him to *"put it all in a savings account because the market has been volatile."*
    - **The test:** the notebook retrieves the evolved profile via `get_context()`, injects it into the system prompt, and asks the real model for advice.
    - **Success looks like:** the response references Alex's current aggressive 90%-stock stance and treats volatility as opportunity. **Failure looks like:** the response sides with the dad's conservative advice — meaning the old Session 1 profile leaked through.
 
 1. Verify in the output which profile the model used, and note the success/failure indicators the cell prints.
 
-1. Run the final code cell (**Step 4: Final Analysis & Key Learnings**). This cell categorizes the stored insights into **conservative**, **aggressive**, and **evolution/change** buckets, prints an explicit contradiction-resolution analysis, and cleans up the memory connection and database.
+      ![](./Images/ETS4111.png)
+
+1. Run the final code cell (**Step 4: Final Analysis & Key Learnings**).
+
+      ![](./Images/ETS4110.png)
+
+
+   This cell categorizes the stored insights into **conservative**, **aggressive**, and **evolution/change** buckets, prints an explicit contradiction-resolution analysis, and cleans up the memory connection and database.
+
+      ![](./Images/ETS4112.png)
 
 1. Verify the curation behavior directly in the final analysis output:
 
@@ -282,11 +312,6 @@ In this task, you will run the insight curation notebook and observe how repeate
    - **Long-term insight curation** (this task) — contradiction resolution and profile evolution with `longterm_synthesis_frequency=1`.
 
    You will use the same mental model again when you move into cloud-backed persistence and bounded long-term memory in later exercises.
-
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
 
 ## 🧾 Summary
 
