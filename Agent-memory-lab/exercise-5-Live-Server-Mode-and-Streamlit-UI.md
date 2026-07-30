@@ -392,24 +392,27 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
 
    ![](./Images/ETS557.png)
 
-1. Save the file and run the demo again using below command:
+1. Run the demo again using below command:
 
    ```
    uv run python demo/05_server_mode.py
    ```
 
-   ![](./Images/ETS555.png)
+   ![](./Images/ETS5510.png)
 
-1. At session start, watch this line closely:
-
-   ```
-   ✓ Session started: ...
-   ✓ Loaded memory context (850 chars)
-   ```
+1. At session start, you can see that it is loaded the memory context from the previous session:
 
    ![](./Images/ETS558.png)
 
-   Compare this context length to Task 2 (which started with a fresh user and showed a small or zero context at start). The larger number here is Alex's data — your 4 prompts, the session summary, and extracted insights — all loaded automatically from the database at session start.
+1. Compare this context length to Task 2 (which started with a fresh user and showed a small or zero context at start). The larger number here is Alex's data — your 4 prompts, the session summary, and extracted insights — all loaded automatically from the database at session start.
+
+1. Ask the Advisor `what do you know about me` and it will give all the points that was provided in the previous session
+
+   ![](./Images/ETS5511.png)
+
+1. once it is verified you can `/quit` to exit from the session
+
+   ![](./Images/ETS5512.png)
 
 1. After verifying, restore the original `USER_ID` line with below command:
 
@@ -417,11 +420,7 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
    USER_ID = f"demo-user-{datetime.now().strftime('%H%M%S')}"
    ```
 
-   ![](./Images/ETS555.png)
-
-1. Switch back to the browser. Click **💰 Financial Advisor - Session 1** in the sidebar. Scroll down in the Key Insights panel to **Recent Session Summaries**. You should now see additional entries at the top of the list — timestamped from this exercise — alongside the existing Sarah sessions. These are your interactive sessions appearing in the same server's data.
-
-   > **Note:** If you do not see your sessions here, it is because the Streamlit UI's Financial Advisor scenario queries `user_id = client_sarah` specifically — not your `demo-user-143022` ID. Your data exists in the server and was confirmed by the context-length test in Step 8. The Streamlit dashboard shows Sarah's data because that is the user ID the scenario buttons are hardcoded to use.
+   ![](./Images/ETS559.png)
 
 1. Confirm the final architectural truth of this exercise by reading the following and verifying each point against what you observed:
 
@@ -446,6 +445,6 @@ In this exercise, you accomplished the following:
 
 - **Verified cross-session recall** by clicking Session 2 and confirming Context Length > 0 and the full Key Insights profile were already loaded before Session 2's first turn played. Confirmed the Insights counter grew and Recent Session Summaries listed both sessions — Task 5.4.
 
-- **Ran interactive mode** (`05_server_mode.py` without `--scripted`), typed 4 prompts as Alex (28-year-old engineer, aggressive stance, $800/month, no debt), ended with `/quit`, and verified the session summary confirmed 4 turns stored and insights extracted. Confirmed Alex's data was loaded by the scripted demo when temporarily set to the same User ID — proving data persisted in the server's database and was accessible to a separate client process — Task 5.5.
+- **Ran interactive mode** (`05_server_mode.py` without `--scripted`), typed 4 prompts as Alex (28-year-old engineer, aggressive stance, $800/month, no debt), ended with `/quit`, and verified the session summary confirmed 4 turns stored and insights extracted. Confirmed Alex's data was loaded by the scripted demo when temporarily set to the same User ID — proving data persisted in the server's database and was accessible to a separate client process — Task 5.
 
 You have successfully completed this exercise. Click **Next >>** to continue to the next exercise.
