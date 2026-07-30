@@ -2,8 +2,6 @@
 
 ### Estimated Duration: 75 Minutes
 
----
-
 ## Scenario
 
 In the previous five exercises you ran pre-built demos, watched memory accumulate, and used the Streamlit UI to visualise what the system produced. In this exercise you stop following pre-written scripts and build something yourself.
@@ -36,32 +34,14 @@ Four "YOUR CHOICE" cells → you own them.
 Four pre-written cells → just run them.
 ```
 
----
-
 ## Objectives
 
-- Task 6.1: Set up and choose your scenario
-- Task 6.2: Run Session 1 and establish facts
-- Task 6.3: Build and test the explicit memory retrieval tool
-- Task 6.4: Run Session 2 and verify cross-session recall
+- Task 1: Set up and choose your scenario
+- Task 2: Run Session 1 and establish facts
+- Task 3: Build and test the explicit memory retrieval tool
+- Task 4: Run Session 2 and verify cross-session recall
 
----
-
-## What to commit to the repo
-
-Before starting, add the starter notebook to your repo so it is on the lab VM:
-
-```
-demo/10_capstone_my_agent.ipynb
-```
-
-This file is provided as part of this exercise's assets. Commit it to `demo/` alongside the other numbered demo notebooks.
-
-> **If the file is not yet in the repo:** your facilitator will provide it, or you can create an empty notebook file named `demo/10_capstone_my_agent.ipynb` and the lab guide will tell you exactly what to type in each cell.
-
----
-
-## Task 6.1: Set Up and Choose Your Scenario
+## Task 1: Set Up and Choose Your Scenario
 
 In this task, you will open the capstone notebook, select a kernel, run the setup cell, and make your scenario choice.
 
@@ -77,37 +57,32 @@ Before picking, read the table below. The choice determines what facts your agen
 
 > **Choosing a scenario is your first real design decision.** Pick the one that most closely matches a real use case you can imagine building professionally.
 
-### Steps
+1. In the Explorer pane, navigate to the  **notebooks (1)** folder and and open **10_capstone_my_agent.ipynb (2)**.
 
-1. On the lab VM, launch **Visual Studio Code** and open the **agent-memory** project folder.
+   ![](./Images/ETS.png)
 
-1. In the Explorer pane, navigate to the **demo** folder and open **10_capstone_my_agent.ipynb**.
+1. Click **Select Kernel (1)** in the top-right corner and select the project's virtual environment, for example **.venv (Python 3.12.x) (2)**.
 
-1. Click **Select Kernel (1)** in the top-right corner and select the project virtual environment — **.venv (Python 3.13.x) (2)**.
+   ![](./Images/ETS611.png)
 
-   > **Note:** If Python 3.13 is not shown, select the `.venv` environment regardless of the Python version number. The important thing is that the virtual environment from the project root is selected, not the system Python.
+1. Read the first markdown cell, **"Exercise 6 Capstone: Build Your Own Memory-Enabled Agent"**. Read the scenario table carefully and making your choice.
 
-1. Read the first markdown cell, **"Exercise 6 Capstone: Build Your Own Memory-Enabled Agent"**. Read the scenario table carefully before making your choice.
+   ![](./Images/ETS614.png)
 
-1. Write your chosen scenario letter (**A**, **B**, or **C**) at the bottom of that markdown cell where it says `YOUR CHOICE: ___`.
+1. Run **Cell 1 — Setup: Imports, Environment, and Project Root**. This cell finds the project root, loads your `.env` file, validates the four required environment variables, and imports `AgentMemory` and `AgentMemoryConfig`.
 
-1. Run **Cell 1 — Setup**. This cell finds the project root, loads your `.env` file, validates the four required environment variables, and imports `AgentMemory` and `AgentMemoryConfig`.
+   ![](./Images/ETS612.png)
 
-   **Expected output:**
-   ```
-   Project root: C:\LabFiles\agent-memory
-   ✅ .env loaded
-   ✅ All required environment variables found
-      Endpoint: https://your-resource.openai.azure.com/
-      Model:    gpt-4o
-   ✅ Cell 1 complete — ready to configure your agent
-   ```
+1. You will get the expected output as show in below image
 
-   > **If you see ❌ Missing environment variables:** open `.env` in the project root and confirm `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_REASONING_MODEL`, and `AZURE_OPENAI_EMB_DEPLOYMENT` are all populated. Save `.env`, then restart the kernel and re-run Cell 1.
+   ![](./Images/ETS613.png)
 
-1. Run **Cell 2 — Configure Your Agent**. Read the reference block for your chosen scenario, then paste it into the `# YOUR CHOICE:` section of the cell, replacing the three `'___'` placeholders.
+1. Run **Cell 2 — Configure Your Agent**. Read the reference block for your chosen scenario, then paste it into the `# YOUR CHOICE:` section of the cell, replacing the three `'___'` placeholders **(1)** and click on **Run (2)**.
 
-   For **Scenario A** (IT Help Desk), paste:
+   For **Scenario A** (IT Help Desk), paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    MY_SCENARIO   = 'A'
    USER_ID       = 'helpdesk-user-001'
@@ -119,8 +94,13 @@ Before picking, read the table below. The choice determines what facts your agen
        '{memory_context}'
    )
    ```
+   </details>
 
-   For **Scenario B** (Travel Planning), paste:
+   For **Scenario B** (Travel Planning), paste below script:
+
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    MY_SCENARIO   = 'B'
    USER_ID       = 'traveler-001'
@@ -132,30 +112,40 @@ Before picking, read the table below. The choice determines what facts your agen
        '{memory_context}'
    )
    ```
+   </details>
 
-   For **Scenario C** (Learning Coach), paste:
+   For **Scenario C** (Learning Coach), paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    MY_SCENARIO   = 'C'
    USER_ID       = 'learner-001'
    AGENT_PERSONA = (
-       'You are a Learning Coach assistant. '
-       'You help users study topics and track their progress. '
-       'Always check memory for topics already covered, quiz scores, and learning style '
-       'before planning the next session. Build on prior sessions, never repeat basics. '
-       '{memory_context}'
+      'You are a Learning Coach assistant. '
+      'You help users study topics and track their progress. '
+      'Always check memory for topics already covered, quiz scores, and learning style '
+      'before planning the next session. Build on prior sessions, never repeat basics. '
+      '{memory_context}'
    )
    ```
+   </details>
 
-   **Expected output after running Cell 2:**
-   ```
-   ✅ Scenario A selected
-      User ID:  helpdesk-user-001
-      Persona:  You are an IT Help Desk assistant. You help users troubleshoot...
-   ```
+   ![](./Images/ETS615.png)
+
+   ![](./Images/ETS616.png)
+
+   >**Note:** in this lab guide we are using scenario A which is IT Help Desk and following images are also updated as per that scenario.
+
+1. You will get the expected output as show in below image
+
+   ![](./Images/ETS617.png)
 
 1. Run **Cell 3 — Tune Memory Configuration**. Read the parameter table in the markdown cell above it carefully — understand what each setting does before running.
 
-   The default values work for this lab session. You do not need to change them now. After you get a working result in Task 6.4, you are encouraged to come back and change `buffer_size` from `4` to `2` and re-run to observe earlier compression.
+   ![](./Images/ETS618.png)
+
+   The default values work for this lab session. You do not need to change them now. After you get a working result in Task 4, you are encouraged to come back and change `buffer_size` from `4` to `2` and re-run to observe earlier compression.
 
    **Expected output:**
    ```
@@ -168,22 +158,21 @@ Before picking, read the table below. The choice determines what facts your agen
       Synthesis frequency:  every 1 session(s)
    ```
 
+   ![](./Images/ETS619.png)
+
 1. Run **Cell 4 — Build the Simple Agent**. This cell creates the `MyAgent` class — a lightweight wrapper around the Azure OpenAI chat API that accepts memory context through the `{memory_context}` placeholder in your persona.
+
+   ![](./Images/ETS6110.png)
 
    **Expected output:**
    ```
    ✅ MyAgent created
-      Model: gpt-4o
+      Model: gpt-5.1
    ```
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
+   ![](./Images/ETS6111.png)
 
----
-
-## Task 6.2: Run Session 1 and Establish Facts
+## Task 2: Run Session 1 and Establish Facts
 
 In this task, you will fill in your Session 1 conversation turns and run them through your agent. The goal is to establish **3–4 specific, memorable facts** that your agent should be able to recall in Session 2 without the user repeating them.
 
@@ -197,13 +186,20 @@ The facts you establish in Session 1 are what your agent will be tested on in Se
 
 > **Think of it this way:** if you were a real user of this agent, what would you be most annoyed to have to repeat in every new session?
 
-### Steps
-
 1. Read the markdown cell above **Cell 5** in the notebook. It shows the example `SESSION_1_TURNS` conversation for all three scenarios.
 
-1. In **Cell 5**, find the `# YOUR CHOICE:` section. Paste the `SESSION_1_TURNS` list for your scenario from the markdown reference — or replace it with your own turns if you want to customise the scenario.
+   ![](./Images/ETS621.png)
 
-   **If using Scenario A (IT Help Desk)**, paste:
+1. In **Cell 5**, find the `# YOUR CHOICE:` section. Paste the `SESSION_1_TURNS` list for your scenario from the markdown reference — or replace it with your own turns if you want to customise the scenario **(1)** and **(2)**.
+
+   ![](./Images/ETS622.png)
+
+   ![](./Images/ETS623.png)
+
+   **If using Scenario A (IT Help Desk)**, paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_1_TURNS = [
        ('user', 'Hi, my name is Sam. I have a Dell XPS 15 laptop running Windows 11.'),
@@ -214,8 +210,12 @@ The facts you establish in Session 1 are what your agent will be tested on in Se
        ('assistant', 'Understood — I will prioritise minimal-downtime solutions given your video editing workflow.'),
    ]
    ```
+   </details>
 
-   **If using Scenario B (Travel Planning)**, paste:
+   **If using Scenario B (Travel Planning)**, paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_1_TURNS = [
        ('user', 'Hi! I\'m Maya. I always fly business class and prefer window seats.'),
@@ -226,8 +226,12 @@ The facts you establish in Session 1 are what your agent will be tested on in Se
        ('assistant', 'Cultural destinations, similar to Tokyo. I will keep that in mind for your next trip recommendation.'),
    ]
    ```
+   </details>
 
-   **If using Scenario C (Learning Coach)**, paste:
+   **If using Scenario C (Learning Coach)**, paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_1_TURNS = [
        ('user', 'Hi coach! I\'m Jordan and I\'m learning Python. I\'m a complete beginner.'),
@@ -238,56 +242,34 @@ The facts you establish in Session 1 are what your agent will be tested on in Se
        ('assistant', 'Practical examples, short sessions — I will structure all future coaching accordingly.'),
    ]
    ```
+   </details>
 
-1. Run **Cell 5**. Watch the output section by section:
+   ![](./Images/ETS622.png)
+
+   ![](./Images/ETS623.png)
+
+1. Watch the output section by section:
 
    - **"Memory context at start: X chars"** — in Session 1, this will be very small (0–50 chars). There is no prior history yet.
    - **Each `[USER]` / `[AGENT]` turn** — confirm the agent is responding coherently. It should not be asking for information already given in the same turn.
    - **"Insights extracted: N"** — after session end this should be `≥ 1`. If it is `0`, your turns may not have contained enough distinct facts.
 
    **Expected output (Scenario A example):**
-   ```
-   Running Session 1 for user: helpdesk-user-001
-   ============================================================
-   Memory context at start: 0 chars
-   No prior memory — this is the first session.
-
-   [USER]: Hi, my name is Sam. I have a Dell XPS 15 laptop running Windows 11.
-   [AGENT]: Thanks Sam! I have noted your Dell XPS 15 on Windows 11...
-
-   [USER]: My Wi-Fi keeps dropping every 30 minutes...
-   [AGENT]: I see — intermittent Wi-Fi after a Windows update...
-
-   [USER]: Also I use this laptop for video editing...
-   [AGENT]: Understood — I will prioritise minimal-downtime solutions...
-
-   ────────────────────────────────────────────────────────────
-   Session 1 ending — triggering reflection...
-   Final context: 847 chars
-   Insights extracted: 3
-     1. User has a Dell XPS 15 running Windows 11
-     2. User experiences intermittent Wi-Fi drops after a Windows update
-     3. User requires minimal-downtime solutions due to video editing workload
 
    ✅ Session 1 complete
-   ```
+
+
+   ![](./Images/ETS624.png)
 
 1. Check: are the facts you established (device, issue, constraint) visible in the **Insights extracted** list? If yes, Session 1 worked. If `Insights extracted: 0`, check that your turns are substantive — turns like `('user', 'OK')` or `('assistant', 'Sure')` will not produce insights.
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
-
-## Task 6.3: Build and Test the Explicit Memory Retrieval Tool
+## Task 3: Build and Test the Explicit Memory Retrieval Tool
 
 In this task, you will fill in the test query for your scenario's explicit retrieval tool and confirm it returns results from Session 1 before using it in Session 2.
 
 ### What an explicit retrieval tool is and why you are building it
 
-In Exercise 2, Task 2.3, you watched the Medical Assistant agent call `search_memory` explicitly before recommending an antibiotic — because the allergy was safety-critical and the agent needed to *choose* to look it up. The function `recall_user_history()` in Cell 6 is exactly that pattern, built for your scenario.
+In Exercise 2, Task 3, you watched the Medical Assistant agent call `search_memory` explicitly before recommending an antibiotic — because the allergy was safety-critical and the agent needed to *choose* to look it up. The function `recall_user_history()` in Cell 6 is exactly that pattern, built for your scenario.
 
 This is different from the `auto_enrich_context=True` setting already in Cell 3:
 
@@ -298,31 +280,45 @@ This is different from the `auto_enrich_context=True` setting already in Cell 3:
 | **Visibility** | Invisible in the output | Visible — prints `🔍 [Explicit memory tool called]` |
 | **Best for** | Convenience | Safety-critical or audit-required lookups |
 
-### Steps
-
 1. In Cell 6, find the `# YOUR CHOICE:` section — specifically the `TEST_QUERY` line:
    ```python
    TEST_QUERY = 'REPLACE ME — enter a search query relevant to your scenario'
    ```
 
-1. Replace it with the test query for your scenario:
+   ![](./Images/ETS631.png)
 
-   **Scenario A — IT Help Desk:**
+1. Replace it with the test query for your scenario and run the cell:
+
+   **Scenario A — IT Help Desk:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    TEST_QUERY = 'What device and OS does this user have? Any known issues or constraints?'
    ```
+   </details>
 
-   **Scenario B — Travel Planning:**
+   **Scenario B — Travel Planning:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    TEST_QUERY = 'What are this user\'s travel preferences, dietary restrictions, and past trips?'
    ```
+   </details>
 
-   **Scenario C — Learning Coach:**
+   **Scenario C — Learning Coach:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    TEST_QUERY = 'What topics has this user covered, what was their score, and what is their learning style?'
    ```
+   </details>
 
-1. Run **Cell 6**. The cell first defines the `recall_user_history()` function, then runs it immediately as a standalone test against the data stored in Session 1.
+   ![](./Images/ETS632.png)
+
+1. The cell first defines the `recall_user_history()` function, then runs it immediately as a standalone test against the data stored in Session 1.
 
    **Expected output (Scenario A example):**
    ```
@@ -338,19 +334,16 @@ This is different from the `auto_enrich_context=True` setting already in Cell 3:
       If the result above contains facts from Session 1, your tool is working.
    ```
 
+   ![](./Images/ETS633.png)
+
 1. Confirm the result contains facts from Session 1 — the device type, the issue, or the constraint you established. If the result shows `No relevant history found in memory`, check:
    - That Cell 5 completed with `Insights extracted: ≥ 1`
    - That your `TEST_QUERY` is semantically related to what was said in Session 1
    - That the `.db` file exists in the project root (`capstone_a_helpdesk-user-001.db` for Scenario A)
 
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
+   ![](./Images/ETS634.png)
 
----
-
-## Task 6.4: Run Session 2 and Verify Cross-Session Recall
+## Task 4: Run Session 2 and Verify Cross-Session Recall
 
 This is the capstone moment. Session 2 starts as a completely fresh `AgentMemory` instance — a new Python object, fresh active buffer, nothing in it from Session 1. Yet when it starts, it loads Session 1's insights and session summary from the database. Your Session 2 turns will include a question the agent can only answer correctly if it remembered Session 1.
 
@@ -364,11 +357,16 @@ For each scenario, there is a clear pass/fail criterion:
 | **B — Travel Planning** | "Can you suggest restaurants in Rome?" | Flags the nut allergy and vegetarian requirement without being told again | Gives generic restaurant suggestions with no allergy awareness |
 | **C — Learning Coach** | "What should we cover today?" | Picks up from where Session 1 left off (after functions/loops, score 85) | "Let us start with the basics — what do you know so far?" |
 
-### Steps
+1. In **Cell 7**, find the `# YOUR CHOICE:` section. 
 
-1. In **Cell 7**, find the `# YOUR CHOICE:` section. Paste the `SESSION_2_TURNS` and `RECALL_BEFORE_TURN` for your scenario:
+   ![](./Images/ETS641.png)
 
-   **Scenario A — IT Help Desk:**
+1. Paste the `SESSION_2_TURNS` and `RECALL_BEFORE_TURN` for your scenario and Run **Cell 7**
+
+   **Scenario A — IT Help Desk:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_2_TURNS = [
        ('user', 'Hi again. Now my laptop is making a loud fan noise all the time.'),
@@ -376,8 +374,12 @@ For each scenario, there is a clear pass/fail criterion:
    ]
    RECALL_BEFORE_TURN = 1
    ```
+   </details>
 
-   **Scenario B — Travel Planning:**
+   **Scenario B — Travel Planning:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_2_TURNS = [
        ('user', 'I want to plan a trip to Rome. Can you suggest some restaurants?'),
@@ -385,8 +387,12 @@ For each scenario, there is a clear pass/fail criterion:
    ]
    RECALL_BEFORE_TURN = 0
    ```
+   </details>
 
-   **Scenario C — Learning Coach:**
+   **Scenario C — Learning Coach:** paste below script:
+   <details>
+   <summary>Click here to expand</summary>
+
    ```python
    SESSION_2_TURNS = [
        ('user', 'What should we cover today?'),
@@ -394,8 +400,11 @@ For each scenario, there is a clear pass/fail criterion:
    ]
    RECALL_BEFORE_TURN = 0
    ```
+   </details>
 
-1. Run **Cell 7**. Watch the output in three specific places:
+      ![](./Images/ETS642.png)
+
+1. Watch the output in three specific places:
 
    **Check 1 — Context loaded at start:**
    ```
@@ -407,6 +416,8 @@ For each scenario, there is a clear pass/fail criterion:
    ```
    The number should be significantly larger than Session 1's starting context (which was 0). This proves the server loaded Session 1's data before a single new turn was processed.
 
+      ![](./Images/ETS643.png)
+
    **Check 2 — Explicit tool call:**
    ```
    🔍 [Explicit memory tool called]
@@ -415,8 +426,12 @@ For each scenario, there is a clear pass/fail criterion:
    ```
    This line confirms the `recall_user_history()` tool ran and retrieved data for the specific turn.
 
+      ![](./Images/ETS644.png)
+
    **Check 3 — Agent response to the recall question:**
    Read the `[AGENT]` response after the turn where `RECALL_BEFORE_TURN` was triggered. For Scenario A, it should reference the Wi-Fi issue and the Dell XPS — information the user **did not repeat** in Session 2.
+
+      ![](./Images/ETS645.png)
 
    **Full expected output structure (Scenario A):**
    ```
@@ -448,7 +463,11 @@ For each scenario, there is a clear pass/fail criterion:
    ✅ Session 2 complete
    ```
 
+   ![](./Images/ETS648.png)
+
 1. Run **Cell 8 — Verification Report**. This cell opens a third fresh `AgentMemory` instance (simulating a third session start), retrieves all sessions and insights, and prints a pass/fail report.
+
+   ![](./Images/ETS646.png)
 
    **Expected output:**
    ```
@@ -474,6 +493,8 @@ For each scenario, there is a clear pass/fail criterion:
    ══════════════════════════════════════════════════════════
    ```
 
+      ![](./Images/ETS647.png)
+
    > **If one or more checks fail:**
    >
    > | Check failed | Action |
@@ -481,13 +502,6 @@ For each scenario, there is a clear pass/fail criterion:
    > | Sessions recorded: 1 | Re-run Cell 7 — Session 2 did not complete cleanly |
    > | Insights extracted: 0 | Re-run Cell 5 with more substantive turns (avoid one-word replies) |
    > | Cross-session context too small | Restart the kernel, re-run Cells 1–5 in order, then re-run Cell 8 |
-
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
 
 ## Stretch Goals (Optional — if time permits)
 
@@ -504,9 +518,6 @@ After running Cells 5–7, add a new code cell that runs a third session (copy t
 
 **Stretch 4 — Switch backend to Cosmos DB**
 In Cell 3, change the `AgentMemory` constructor to use `db_type=DatabaseType.COSMOSDB` and add your Cosmos DB credentials. Delete the `.db` file and re-run Cells 5–8. Confirm the verification report still passes — proving your agent works identically across backends with one config change.
-
----
-
 ## Summary
 
 In this exercise, you accomplished the following:

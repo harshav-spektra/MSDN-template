@@ -422,6 +422,8 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
 
    ![](./Images/ETS559.png)
 
+1. Then, go to **Terminal 1 & 3** and stop the server and streamlit UI by clicking on **CTRL + C**.
+
 1. Confirm the final architectural truth of this exercise by reading the following and verifying each point against what you observed:
 
    | What you did | What it proves |
