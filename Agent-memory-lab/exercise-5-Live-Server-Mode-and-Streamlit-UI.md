@@ -76,11 +76,13 @@ The client never needs to know how memory works — it only needs the server URL
 
    ![](./Images/ETS117.png)
 
-1. Start the FastAPI memory server:
+1. Paste the below command in the terminal to start the FastAPI memory server:
 
    ```
    uv run uvicorn server.main:app --host 127.0.0.1 --port 8000
    ```
+   
+   ![](./Images/ETS511.png)
 
    > **What this means:** `server.main:app` tells Uvicorn to open `server/main.py` and find the `app` variable — the FastAPI application object. `--host 127.0.0.1` restricts it to your local machine. `--port 8000` is the port both clients will use.
 
@@ -91,29 +93,21 @@ The client never needs to know how memory works — it only needs the server URL
    INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
    ```
 
+   ![](./Images/ETS512.png)
+
    > **Do NOT close Terminal 1 or press Ctrl+C during this exercise.** Both clients fail immediately if the server stops.
 
-1. Open a **second terminal** (click the **+** icon). This is **Terminal 2 — your client terminal**.
+1. click the **+** icon to open a **second terminal**. This is **Terminal 2 — your client terminal**.
 
-1. Verify the server health. On the Windows lab VM (PowerShell):
+   ![](./Images/ETS513.png)
+
+1. Execute the below command to verify the server health and Confirm the response healthy
 
    ```
    Invoke-RestMethod http://127.0.0.1:8000/health
    ```
-
-   > **Why `Invoke-RestMethod` and not `curl`?** On Windows, `curl` is aliased to `Invoke-WebRequest` and throws an Internet Explorer engine parsing error. `Invoke-RestMethod` returns JSON already parsed.
-
-1. Confirm the response:
-
-   ```
-   status  active_sessions uptime_seconds
-   ------  --------------- --------------
-   healthy               0     4.892
-   ```
-
-   - **status: healthy** — server started successfully, connected to its database, ready to receive requests.
-   - **active_sessions: 0** — no clients connected yet. This increments as clients start sessions.
-   - **uptime_seconds** — how long the process has been alive.
+   
+   ![](./Images/ETS514.png)
 
 ## Task 2: Run the Scripted Terminal Demo and Observe What the Server Records
 
@@ -131,67 +125,33 @@ The script runs this conversation automatically:
 | 4 | "What about a Roth IRA? Is that something I should consider at my age?" | Key question for insight extraction |
 | 5 | "That makes sense. What's the contribution limit for a Roth IRA?" | Confirms topic interest |
 
-### Steps
-
-1. In Terminal 2, run:
+1. In **Terminal 2**, run the following command to execute the `05_server_mode.py` in scripted mode. Once the command executes successfully, verify from the output that the **Memory service is healthy** and a **session has started**, as shown in the image below.
 
    ```
    uv run python demo/05_server_mode.py --scripted
    ```
-
-1. Watch the connection confirmation:
-
-   ```
-   ✓ Memory service: healthy
-   ✓ Session started: a3f8b2c1...
-   ```
+   
+   ![](./Images/ETS521.png)
 
    > The script called `POST http://localhost:8000/sessions/start`. Notice `05_server_mode.py` has no `AgentMemory(...)` constructor — only HTTP calls.
 
-1. Watch each turn as it stores:
+1. Watch each turn as it stores. After all 5 turns, the script attempts a semantic search. You may see the below result
 
-   ```
-   [Turn 1]
-   User: Hi! I'm looking for advice on saving for retirement. I'm 35 years old.
-   Advisor: Great that you're thinking about retirement at 35! ...
-     → Stored (turn 1)
-   ```
-
-   Each `→ Stored (turn N)` line means `POST http://localhost:8000/turns/store` was called and the server ran `AgentMemory.add_turn()` internally.
-
-1. After all 5 turns, the script attempts a semantic search. You may see one of two outcomes:
-
-   **Outcome A — Search succeeds:**
    ```
    Searching memory for 'Roth IRA'...
    Results: ...the Roth IRA contribution limit is $7,000...
    ```
 
-   **Outcome B — ReadTimeout error (known issue):**
-   ```
-   Searching memory for 'Roth IRA'...
-   httpx.ReadTimeout
-   ```
+   ![](./Images/ETS522.png)
 
-   > **If you see Outcome B:** This is a known timeout issue. The semantic search generates an embedding via Azure OpenAI before searching, which can exceed the HTTP client's default timeout under lab conditions. **Your session data is completely intact** — all 5 turns were stored before this step ran. The search concept is demonstrated visually in Task 5.3 through the Key Insights panel. To retry with a longer timeout:
+   > **If you see ReadTimeout error** This is a known timeout issue. The semantic search generates an embedding via Azure OpenAI before searching, which can exceed the HTTP client's default timeout under lab conditions. **Your session data is completely intact** — all 5 turns were stored before this step ran. The search concept is demonstrated visually in Task 3 through the Key Insights panel. To retry with a longer timeout:
    > ```
    > $env:HTTPX_TIMEOUT=60; uv run python demo/05_server_mode.py --scripted
    > ```
 
-   > **If the script crashed with a full traceback after the search step:** This happened because the ReadTimeout was not caught and exited the process. Your 5 turns are still stored correctly. Continue to Task 5.3.
+1. You can check the session summary at the end of the demo
 
-1. Whether the search succeeded or timed out, look for the session end summary:
-
-   ```
-   ======================================================================
-   ✅ Demo Complete!
-   ======================================================================
-   Turns: 5
-   Insights extracted: 3
-   Long-term synthesis: Yes
-   Summary: User is a 35-year-old beginning retirement planning. Has a
-   401k with 4% employer match, contributing 8%. Interested in Roth IRA...
-   ```
+   ![](./Images/ETS522.png)
 
    > **What happened at session end:** The server ran the reflection engine across all 5 turns, extracted 3 durable insights, and wrote them to the database. These will be loaded automatically into any future session for the same `user_id`.
 
@@ -203,6 +163,8 @@ The script runs this conversation automatically:
    INFO: GET  /memory/context - 200
    INFO: POST /sessions/end - 200
    ```
+
+   ![](./Images/ETS523.png)
 
    > Every operation was an HTTP request. `05_server_mode.py` is just an HTTP client. All memory logic ran inside `server/main.py`.
 
@@ -221,27 +183,35 @@ The Streamlit UI is a **memory visualization dashboard** — it makes the intern
 - **Current Context panel** — expandable; shows the raw memory context the model would receive.
 - **Key Insights panel** — structured long-term profile: PREFERENCES, GOALS, BEHAVIOR PATTERNS, KNOWLEDGE LEVEL.
 
-### Steps
-
-1. Open a **third terminal** (click **+**). This is **Terminal 3 — the Streamlit terminal**.
-
-1. Start the Streamlit UI:
+1. click **+** to open a **third terminal**. This is **Terminal 3 — the Streamlit terminal** and execute the below command to start the Streamlit UI.
 
    ```
    uv run streamlit run demo/07_interactive_ui.py
    ```
 
-1. When Streamlit prints the URL, open it in the lab VM browser:
+   ![](./Images/ETS531.png)
+
+1. If it is prompted to provide the Email, keep it blank and press **Enter** in your keyboard
+
+   ![](./Images/ETS532.png)
+
+1. When Streamlit prints the URL, it will automatically opens in the browser. If it is not opened autoamtically, paste the below url in the browser to get the Streamlit UI
 
    ```
    http://localhost:8501
    ```
 
-1. Confirm the **🟢 Server Online** indicator in the top-right corner. It shows something like `Server Online (2 sessions)`.
+   ![](./Images/ETS533.png)
 
-   > **If you see 🔴 Server Offline:** Return to Terminal 1 and confirm the server is still running. Restart if needed.
+1. Confirm the **🟢 Server Online** indicator in the top-right corner.
 
-1. Click **💰 Financial Advisor - Session 1 (1)** in the left sidebar.
+   ![](./Images/ETS534.png)
+
+   > **Note:** If you see 🔴 Server Offline, return to Terminal 1 and confirm the server is still running. Restart if needed.
+
+1. Click **💰 Financial Advisor - Session 1** in the left sidebar.
+
+   ![](./Images/ETS5310.png)
 
 1. **Before clicking anything**, read the Memory System State panel on the right:
 
@@ -256,6 +226,8 @@ The Streamlit UI is a **memory visualization dashboard** — it makes the intern
    > **Why do Shopping Assistant, Learning Assistant, and Medical Assistant scenarios appear empty?**
    > Each scenario uses a different `user_id`. Those scenarios have never been run in this lab environment so the server has no data for those user IDs. Their buttons exist and work correctly — they just have empty Key Insights because there are no prior sessions to load from.
 
+   ![](./Images/ETS534.png)
+
 1. Read through the Key Insights panel. Confirm these sections are present: PREFERENCES, GOALS, BEHAVIOR PATTERNS, KNOWLEDGE LEVEL, CROSS-CATEGORY PATTERNS. This is the profile the reflection engine built from all of Sarah's prior sessions.
 
 1. At the bottom of the left sidebar, find **Playback Controls**. Use these options:
@@ -263,7 +235,7 @@ The Streamlit UI is a **memory visualization dashboard** — it makes the intern
    - **⏭ Next (1)** — advances one turn at a time. Use this to read each turn carefully.
    - **▶ Play (2)** — runs all turns automatically at a set pace.
 
-   > **Important — do NOT click ⏸ Pause.** A known issue means clicking Pause can interrupt the async playback loop and stop the Streamlit app. If the app stops, restart it in Terminal 3: `uv run streamlit run demo/07_interactive_ui.py`
+   ![](./Images/ETS536.png)
 
 1. Click **⏭ Next** three times, checking the Memory System State panel after each click:
 
@@ -271,17 +243,21 @@ The Streamlit UI is a **memory visualization dashboard** — it makes the intern
    - **After Next 2:** Advisor response appears. **Turns Processed = 2**, Context Length increased again.
    - **After Next 3:** Second user turn. **Turns Processed = 3**, Context Length ≈ `2,285...`
 
+   ![](./Images/ETS537.png)
+
 1. Click **▶ Play** to run the remaining turns. Watch **Turns Processed** count to 5 and **Context Length** grow.
 
-1. When playback completes, watch the **Insights counter** jump from 0 to a positive number (3–5). This is `end_session(trigger_reflection=True)` running — durable facts extracted, written to the database.
+1. When playback completes, watch the **Insights counter** jump from 0 to a positive number (3–5). you will get summary and insights. This is `end_session(trigger_reflection=True)` running — durable facts extracted, written to the database.
+
+   ![](./Images/ETS538.png)
 
 ## Task 4: Verify Cross-Session Recall — Session 2 Loading Session 1's Memory
 
 In this task, you will prove that memory persists across separate sessions by watching Session 2 already know everything Session 1 learned — before a single new turn is processed.
 
-### Steps
+1. Click **💰 Financial Advisor - Session 2** in the left sidebar.
 
-1. Click **💰 Financial Advisor - Session 2 (1)** in the left sidebar.
+   ![](./Images/ETS539.png)
 
 1. **Before clicking Play**, confirm in the Memory System State panel:
 
@@ -289,33 +265,28 @@ In this task, you will prove that memory persists across separate sessions by wa
    - **Context Length: greater than 0** — already populated despite zero turns.
    - **Key Insights panel** — shows Sarah's full profile, same as at Session 1 end.
 
+   ![](./Images/ETS541.png)
+
    > **This is cross-session recall.** Turns Processed is 0. Yet the context is not empty. The server retrieved Sarah's prior session summaries and long-term insights at session start — before any new turn was processed.
 
-1. Click **▶ Play** and watch the Session 2 conversation. The first user message should reference prior context:
+1. Click **▶ Play (1)** and watch the Session 2 conversation. The first user message should reference prior context **(2)**
 
-   ```
-   User: Based on what we discussed before, what should I prioritise next?
-   ```
+   ![](./Images/ETS543.png)
 
    The advisor's response should reference Sarah's prior preferences (conservative approach, 60/40 allocation, $500/month contributions) without her having re-stated them.
 
 1. After Session 2 finishes, compare the **Insights counter** to the count from Session 1 — it should be higher, as new insights accumulated or existing ones were updated.
 
-1. Scroll down in the Key Insights panel to **Recent Session Summaries**. Confirm at least two entries with timestamps — one from Session 1, one from Session 2:
+   ![](./Images/ETS544.png)
 
-   ```
-   Recent Session Summaries
-   2026-07-24T09:30:00: Session completed.
-   Conversation Summary: User asked about next steps given conservative...
+1. Scroll down and expand **Current context** to see **Recent Session Summaries**. Confirm at least two entries with timestamps — one from Session 1, one from Session 2:
 
-   2026-07-24T09:29:00: Session completed.
-   Conversation Summary: User asked about Roth IRA basics and limits...
-   ```
+   ![](./Images/ETS545.png)
 
    > Every future session will load these summaries in its context — giving the agent a compressed relationship history, not just the most recent turns.
 
 
-## Task 5: Interactive — Type Your Own Prompts and Verify Them in the Browser
+## Task 5: Interactive — Type Your Own Prompts and Verify Them.
 
 This is the exercise's hands-on capstone. You will run the terminal client in **interactive mode**, type your own messages as a new user, end the session, and then verify in the Streamlit browser that those exact messages were stored by the server. This closes the full loop: your input → server → database → browser.
 
@@ -341,32 +312,17 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
 
 > **Expected response length:** The advisor may give a detailed multi-paragraph response, especially to the first prompt. That is normal — just type the next prompt from the list.
 
-### Steps
-
-1. In Terminal 2, start the interactive client:
+1. Go to **Visual Studio** and select **Terminal 2 (1)**, then run the below command **(2)** to start the interactive client:
 
    ```
    uv run python demo/05_server_mode.py
    ```
 
-1. Wait for the chat prompt. The output will look like:
+   ![](./Images/ETS551.png)
 
-   ```
-   ======================================================================
-   💰 Financial Advisor Demo (Remote Memory Service)
-   ======================================================================
-   Memory Service: http://localhost:8000
-   User ID: demo-user-143022
+1. Wait for the chat prompt. The output will look like below Write down your `User ID` — for later use
 
-   ✓ Memory service: healthy (3 active sessions)
-   ✓ Session started: f9a2c3d4...
-
-   Chat with your financial advisor (type /quit to end)
-   ────────────────────────────────────────────────────
-   You:
-   ```
-
-   > **Write down your `User ID`** — for example `demo-user-143022`. You will use this in Step 7 to verify your data in the server. It changes every run because it is generated from the current time.
+   ![](./Images/ETS553.png)
 
 1. Type and send the following four prompts **one at a time**. Press Enter after each, wait for the advisor to respond, then type the next:
 
@@ -394,36 +350,23 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
    ```
    *Read the advisor's response — it should reference Alex's age, aggressive stance, and $800/month.*
 
-1. After the advisor responds to Prompt 4, end the session:
+   ![](./Images/ETS554.png)
+
+1. After the advisor responds to Prompt 4, end the session by executing below command:
 
    ```
    /quit
    ```
 
-1. Read the session end output:
+1. Read the session end output and confirm the summary accurately reflects your four prompts 
 
-   ```
-   Processing session (extracting insights)...
-
-   ======================================================================
-   Session Summary
-   ======================================================================
-   Turns: 4
-   Insights extracted: 3
-   Long-term synthesis: Yes
-   Summary: Alex is a 28-year-old software engineer with an aggressive
-   investment approach, comfortable with 100% stocks. Has $800/month
-   available to invest with no debt...
-   ======================================================================
-   ```
-
-   Confirm the summary accurately reflects your four prompts — Alex's name, aggressive stance, $800/month, no debt. This is the compressed version of your session that future sessions will load.
+   ![](./Images/ETS555.png)
 
    > **If the session end times out or crashes:** Your 4 turns were stored before the timeout. The summary may not print, but your data is in the database. Continue to Step 6.
 
-1. Now open (or switch to) the browser at `http://localhost:8501`. The Streamlit sidebar shows only the pre-built scenario buttons — you will not see a button for "Alex" or your `demo-user-143022` ID, because the sidebar buttons are hardcoded to specific scenario user IDs (`client_sarah`, etc.). You will verify your data a different way.
+1. Now open the browser at `http://localhost:8501`. The Streamlit sidebar shows only the pre-built scenario buttons — you will not see a button for "Alex" or your `demo-user` ID, because the sidebar buttons are hardcoded to specific scenario user IDs (`client_sarah`, etc.). You will verify your data a different way.
 
-1. To directly query your session from the server, run this in Terminal 2 — replacing `demo-user-143022` with the actual User ID you wrote down in Step 2:
+1. To directly query your session from the server, run this in **Terminal 2** — replacing `demo-user-ID` with the actual User ID you wrote down in Step 2:
 
    ```
    Invoke-RestMethod "http://127.0.0.1:8000/health"
@@ -432,43 +375,49 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
    Then try querying your user's context:
 
    ```
-   Invoke-RestMethod -Uri "http://127.0.0.1:8000/memory/context" -Method GET -Body (@{user_id="demo-user-143022"} | ConvertTo-Json) -ContentType "application/json"
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/memory/context" -Method GET -Body (@{user_id="demo-user-180557"} | ConvertTo-Json) -ContentType "application/json"
    ```
 
    > **Note:** The exact endpoint path depends on the server implementation. Check `server/main.py` for the correct route. Look for routes containing `context`, `insights`, or `users`. If the route format is different, adjust the command to match.
 
-1. **Alternative verification — reuse your User ID in the scripted demo.** Open `demo/05_server_mode.py` in VS Code. Find this line near the top:
+1. **Alternative verification — reuse your User ID in the demo.** Open `demo/05_server_mode.py` **(1)** in VS Code. Find this below line at the 41 line **(2)**:
 
-   ```python
+   ```
    USER_ID = f"demo-user-{datetime.now().strftime('%H%M%S')}"
    ```
+   
+   ![](./Images/ETS556.png)
 
-   Temporarily change it to your specific ID from Step 2:
+1. Temporarily change it to your specific ID from Step 2 and save the file by clicking on **Ctrl + S**:
 
-   ```python
-   USER_ID = "demo-user-143022"   # replace with your actual ID
+   ![](./Images/ETS557.png)
+
+1. Save the file and run the demo again using below command:
+
+   ```
+   uv run python demo/05_server_mode.py
    ```
 
-   Save the file and run the scripted demo:
+   ![](./Images/ETS555.png)
 
-   ```
-   uv run python demo/05_server_mode.py --scripted
-   ```
-
-   At session start, watch this line closely:
+1. At session start, watch this line closely:
 
    ```
    ✓ Session started: ...
    ✓ Loaded memory context (850 chars)
    ```
 
-   Compare this context length to Task 5.2 (which started with a fresh user and showed a small or zero context at start). The larger number here is Alex's data — your 4 prompts, the session summary, and extracted insights — all loaded automatically from the database at session start.
+   ![](./Images/ETS558.png)
 
-   After verifying, restore the original `USER_ID` line:
+   Compare this context length to Task 2 (which started with a fresh user and showed a small or zero context at start). The larger number here is Alex's data — your 4 prompts, the session summary, and extracted insights — all loaded automatically from the database at session start.
 
-   ```python
+1. After verifying, restore the original `USER_ID` line with below command:
+
+   ```
    USER_ID = f"demo-user-{datetime.now().strftime('%H%M%S')}"
    ```
+
+   ![](./Images/ETS555.png)
 
 1. Switch back to the browser. Click **💰 Financial Advisor - Session 1** in the sidebar. Scroll down in the Key Insights panel to **Recent Session Summaries**. You should now see additional entries at the top of the list — timestamped from this exercise — alongside the existing Sarah sessions. These are your interactive sessions appearing in the same server's data.
 
@@ -484,13 +433,6 @@ Interactive mode opens a real chat loop where you type freely. The agent persona
    | Streamlit showed 🟢 Server Online throughout | Both clients share one server; neither has its own memory |
 
    **One server. Multiple clients. Shared memory. This is the architecture.**
-
-> **Congratulations** on completing the task! Now, it's time to validate it. Here are the steps:
-> - Scroll down in the lab guide and hit the Validate button for the corresponding task. If you receive a success message, you can proceed to the next task.
-> - If not, carefully read the error message and retry the step, following the instructions in the lab guide.
-> - If you need any assistance, please contact us at cloudlabs-support@spektrasystems.com. We are available 24/7 to help you out.
-
----
 
 ## 🧾 Summary
 

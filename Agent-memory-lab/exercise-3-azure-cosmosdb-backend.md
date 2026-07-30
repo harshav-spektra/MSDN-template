@@ -316,7 +316,7 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
 
       ![](./Images/ETS349.png)
 
-1. Run the final code cell (**Cell 3 — Execute Fll 6-Month Memory Simulation**). Watch the output section by section — it is long, but each section tells a clear story:
+1. Run the final code cell (**Cell 3 — Execute Full 6-Month Memory Simulation**). Watch the output section by section — it is long, but each section tells a clear story:
 
    ![](./Images/ETS348.png)
 
@@ -352,7 +352,7 @@ This notebook simulates six months of client sessions, capped at `MAX_INSIGHTS =
    - Insights that were repeatedly referenced (like the Roth IRA) have high `access_count` scores and remain.
    - The agent's memory is now a curated, scored representation of what matters most about Alex — not a raw dump of everything that was ever said.
 
-   ![](./Images/ETS348.png)
+   ![](./Images/ETS429.png)
 
 1. After the main run completes, return to the **Azure Portal Data Explorer** and refresh the **insights** container. Confirm that exactly **5** (or fewer) insight documents exist for `user_id = "memory_priority_demo_cosmos"` — the pruning was real, not just simulated.
 
