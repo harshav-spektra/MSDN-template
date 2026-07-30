@@ -184,7 +184,7 @@ The facts you establish in Session 1 are what your agent will be tested on in Se
 - **Testable** — you need to be able to ask a question in Session 2 that can only be answered correctly if the agent remembered Session 1
 - **Realistic** for your scenario — preferences, constraints, and background facts that a real user would share once and expect to not repeat
 
-> **Think of it this way:** if you were a real user of this agent, what would you be most annoyed to have to repeat in every new session?
+   > **Think of it this way:** if you were a real user of this agent, what would you be most annoyed to have to repeat in every new session?
 
 1. Read the markdown cell above **Cell 5** in the notebook. It shows the example `SESSION_1_TURNS` conversation for all three scenarios.
 
@@ -503,7 +503,7 @@ For each scenario, there is a clear pass/fail criterion:
    > | Insights extracted: 0 | Re-run Cell 5 with more substantive turns (avoid one-word replies) |
    > | Cross-session context too small | Restart the kernel, re-run Cells 1–5 in order, then re-run Cell 8 |
 
-## Stretch Goals (Optional — if time permits)
+## Stretch Goals (Optional)
 
 These are optional challenges for learners who finish early. None of them are required for the verification report to pass.
 
