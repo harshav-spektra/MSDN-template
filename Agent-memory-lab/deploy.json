@@ -235,7 +235,7 @@
         "settings": {
           "fileUris": [
             "https://experienceazure.blob.core.windows.net/templates/cloudlabs-common/cloudlabs-windows-functions.ps1",
-            "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Agent-memory-lab/psscript.ps1"
+            "https://raw.githubusercontent.com/harshav-spektra/MSDN-template/refs/heads/main/Agent-memory-lab/psscript.ps1"
           ]
         },
         "protectedSettings": {
