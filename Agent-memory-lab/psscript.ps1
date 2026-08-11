@@ -28,8 +28,8 @@ try {
     $repoRoot = Join-Path $labRoot 'agent-memory'
     $publicDesktop = 'C:\Users\Public\Desktop'
     # Set the repository clone URL here.
-    $githubPAT    = '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'   # your fork's test token
-    $repoCloneUrl = "https://$githubPAT@github.com/harshav-spektra/test-repo.git"
+    $githubPAT    = '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'   # your fork's test token
+    $repoCloneUrl = "https://x-access-token:$PAT@github.com/harshav-spektra/test-repo.git"
 
     New-Item -Path $labRoot -ItemType Directory -Force | Out-Null
     New-Item -Path $publicDesktop -ItemType Directory -Force | Out-Null
