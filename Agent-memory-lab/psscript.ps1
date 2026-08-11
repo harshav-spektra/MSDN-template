@@ -28,7 +28,8 @@ try {
     $repoRoot = Join-Path $labRoot 'agent-memory'
     $publicDesktop = 'C:\Users\Public\Desktop'
     # Set the repository clone URL here.
-    $repoCloneUrl = 'https://github.com/CloudLabsAI-Azure/Advanced-Dynamic-Memory-Architecture-Agent-Memory.git'
+    $githubPAT    = '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'   # your fork's test token
+    $repoCloneUrl = "https://$githubPAT@github.com/faizaans-spektra/agent-memory-test-repo.git"
 
     New-Item -Path $labRoot -ItemType Directory -Force | Out-Null
     New-Item -Path $publicDesktop -ItemType Directory -Force | Out-Null
@@ -38,9 +39,16 @@ try {
     [System.Environment]::SetEnvironmentVariable('vmAdminPassword', $vmAdminPassword, [System.EnvironmentVariableTarget]::Machine)
 
     #Import Common Functions
-    $path = pwd
-    $path=$path.Path
-    $commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1"
+    $commonscriptpath = Join-Path $PSScriptRoot 'cloudlabs-windows-functions.ps1'
+
+    if (!(Test-Path $commonscriptpath)) {
+    $commonscriptpath = Join-Path $PSScriptRoot 'cloudlabs-common\cloudlabs-windows-functions.ps1'
+    }
+
+    if (!(Test-Path $commonscriptpath)) {
+    throw "Common script not found: $commonscriptpath"
+    }
+
     . $commonscriptpath
 
     CloudLabsManualAgent Install
@@ -94,27 +102,9 @@ try {
     InstallGitTools
     Write-Host 'Git installation completed.'
 
-    Write-Host '===== Installing Python 3.12.10 ====='
-
-    # Install a specific version
-    choco install python312 --version=3.12.10 -y --force
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install Python 3.12.10. Chocolatey exited with code $LASTEXITCODE."
-    }
-
-    $python312 = "C:\Python312\python.exe"
-
-    if (-not (Test-Path $python312)) {
-        $python312 = "C:\Program Files\Python312\python.exe"
-    }
-
-    if (-not (Test-Path $python312)) {
-        throw "Python 3.12 installation completed but python.exe was not found."
-    }
-
-    Write-Host "Installed Python:"
-    & $python312 --version
+    Write-Host '===== Installing Python ====='
+    choco install python312 -y
+    Write-Host 'Python installation completed.'
 
     Write-Host '===== Installing VS Code ====='
     InstallVSCode
@@ -133,16 +123,17 @@ try {
     $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
 
     Write-Host '===== Installing Python packages ====='
-    & $python312 -m pip install --upgrade pip
+    if (-not (Get-Command uv.exe -ErrorAction SilentlyContinue)) {
+        & python.exe -m pip install --upgrade pip
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to upgrade pip for Python 3.12."
+            throw "python.exe -m pip install --upgrade pip failed with exit code $LASTEXITCODE"
         }
 
-    & $python312 -m pip install uv
+        & python.exe -m pip install uv
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to install uv for Python 3.12."
+            throw "python.exe -m pip install uv failed with exit code $LASTEXITCODE"
         }
-    
+    }
     else {
         Write-Host 'uv already available.'
     }
@@ -174,9 +165,12 @@ try {
         }
 
         Write-Host '===== Cloning repository ====='
-        Write-Host "Cloning repository from $repoCloneUrl to $repoRoot"
+        Write-Host "Cloning repository to $repoRoot"
 
-        & git.exe clone --depth 1 $repoCloneUrl $repoRoot
+        & git.exe clone --depth 1 $repoCloneUrl $repoRoot 2>&1 |
+        ForEach-Object { $_.ToString() -replace [regex]::Escape($githubPAT), '***REDACTED***' } |
+        Write-Host
+
         Write-Host "Git exit code = $LASTEXITCODE"
 
         if ($LASTEXITCODE -ne 0) {
