@@ -47,10 +47,8 @@
                     }
                   },
                   {
-                    "not": {
-                      "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
-                      "greater": 100
-                    }
+                    "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
+                    "greater": 100
                   }
                 ]
               }
