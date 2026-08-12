@@ -49,7 +49,7 @@
                   {
                     "not": {
                       "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
-                      "equals": 100
+                      "greater": 100
                     }
                   }
                 ]
