@@ -1,0 +1,66 @@
+{
+  "properties": {
+    "displayName": "Allow Approved Azure AI Models with Approved SKU and Capacity",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Allows only approved Azure OpenAI and AI model deployments with their approved SKU and capacity of TPM",
+    "metadata": {
+      "category": "Cognitive Services",
+      "version": "1.0.0"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.CognitiveServices/accounts/deployments"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.CognitiveServices/accounts/deployments/model.name",
+                  "in": [
+                    "text-embedding-3-large"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.CognitiveServices/accounts/deployments"
+              },
+              {
+                "field": "Microsoft.CognitiveServices/accounts/deployments/model.name",
+                "equals": "text-embedding-3-large"
+              },
+              {
+                "anyOf": [
+                  {
+                    "not": {
+                      "field": "Microsoft.CognitiveServices/accounts/deployments/sku.name",
+                      "in": [
+                        "GlobalStandard"
+                      ]
+                    }
+                  },
+                  {
+                    "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
+                    "greater": 100
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}
