@@ -1,12 +1,12 @@
 {
   "properties": {
-    "displayName": "Allow Approved Azure AI Models with Approved SKU and Capacity",
+    "displayName": "Allow Approved Azure AI Models and Azure AI Search SKUs",
     "policyType": "Custom",
     "mode": "All",
-    "description": "Allows only approved Azure OpenAI and AI model deployments with their approved SKU and capacity of TPM",
+    "description": "Allows only approved Azure OpenAI model deployments and Azure AI Search services with approved SKUs.",
     "metadata": {
       "category": "Cognitive Services",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     "parameters": {},
     "policyRule": {
@@ -43,16 +43,33 @@
                   {
                     "not": {
                       "field": "Microsoft.CognitiveServices/accounts/deployments/sku.name",
-                      "in": [
-                        "GlobalStandard"
-                      ]
+                      "equals": "GlobalStandard"
                     }
                   },
                   {
-                    "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
-                    "greater": 100
+                    "not": {
+                      "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
+                      "equals": 100
+                    }
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Search/searchServices"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Search/searchServices/sku.name",
+                  "in": [
+                    "free",
+                    "basic"
+                  ]
+                }
               }
             ]
           }
