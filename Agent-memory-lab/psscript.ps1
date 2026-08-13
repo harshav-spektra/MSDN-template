@@ -35,9 +35,9 @@ try {
     [System.Environment]::SetEnvironmentVariable('vmAdminUsername', $vmAdminUsername, [System.EnvironmentVariableTarget]::Machine)
     [System.Environment]::SetEnvironmentVariable('vmAdminPassword', $vmAdminPassword, [System.EnvironmentVariableTarget]::Machine)
 
-    #Import Common Functions
+    # Import Common Functions
     $path = pwd
-    $path=$path.Path
+    $path = $path.Path
     $commonscriptpath = "$path" + "\cloudlabs-common\cloudlabs-windows-functions.ps1"
     . $commonscriptpath
 
@@ -46,7 +46,7 @@ try {
 
     CreateCredFile -AzureUserName $AzureUserName -AzurePassword $AzurePassword -AzureTenantID $AzureTenantID -AzureSubscriptionID $AzureSubscriptionID -DeploymentID $DeploymentID
 
-    #Setting Env Variables
+    # Setting Env Variables
     Write-Host "Adding .env variables"
 
     if (-not [string]::IsNullOrWhiteSpace($ODLID)) {
@@ -57,13 +57,12 @@ try {
     Copy-Item -Path (Join-Path $labRoot 'AzureCreds.txt') -Destination (Join-Path $publicDesktop 'AzureCreds.txt') -Force
     Copy-Item -Path (Join-Path $labRoot 'AzureCreds.ps1') -Destination (Join-Path $publicDesktop 'AzureCreds.ps1') -Force
 
-    Function updateVMShadowFile
-    {
-    #Replace vmAdminUsernameValue with VM Admin UserName in script content 
-    $drivepath="C:\Users\Public\Documents"
-    (Get-Content -Path "$drivepath\Shadow.ps1") | ForEach-Object {$_ -Replace "vmAdminUsernameValue", "$vmAdminUsername"} | Set-Content -Path "$drivepath\Shadow.ps1"
-    #Update random password
-    net user $trainerUserName $trainerUserPassword
+    Function updateVMShadowFile {
+        # Replace vmAdminUsernameValue with VM Admin UserName in script content
+        $drivepath = "C:\Users\Public\Documents"
+        (Get-Content -Path "$drivepath\Shadow.ps1") | ForEach-Object { $_ -Replace "vmAdminUsernameValue", "$vmAdminUsername" } | Set-Content -Path "$drivepath\Shadow.ps1"
+        # Update random password
+        net user $trainerUserName $trainerUserPassword
     }
     updateVMShadowFile
 
@@ -75,8 +74,6 @@ try {
     Write-Host 'Git installation completed.'
 
     Write-Host '===== Installing Python 3.12.10 ====='
-
-    # Install a specific version
     choco install python312 --version=3.12.10 -y --force
 
     if ($LASTEXITCODE -ne 0) {
@@ -114,18 +111,15 @@ try {
 
     Write-Host '===== Installing Python packages ====='
     & $python312 -m pip install --upgrade pip
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to upgrade pip for Python 3.12."
-        }
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to upgrade pip for Python 3.12."
+    }
 
     & $python312 -m pip install uv
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to install uv for Python 3.12."
-        }
-    
-    else {
-        Write-Host 'uv already available.'
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install uv for Python 3.12."
     }
+    Write-Host 'uv installation completed.'
 
     Write-Host '===== Installing VS Code extensions ====='
     $extensions = @(
@@ -150,53 +144,53 @@ try {
 
     Write-Host '===== Downloading Agent Memory repository ====='
 
-$repoZipUrl = 'https://harshav.blob.core.windows.net/agent-memory/agent-memory.zip'
-$repoZipPath = Join-Path $labRoot 'agent-memory.zip'
+    $repoZipUrl = 'https://harshav.blob.core.windows.net/agent-memory/agent-memory.zip'
+    $repoZipPath = Join-Path $labRoot 'agent-memory.zip'
 
-if (Test-Path $repoZipPath) {
-    Remove-Item $repoZipPath -Force
-}
-
-if (Test-Path $repoRoot) {
-    Remove-Item $repoRoot -Recurse -Force
-}
-
-$WebClient = New-Object System.Net.WebClient
-
-$WebClient.DownloadFile(
-    $repoZipUrl,
-    $repoZipPath
-)
-
-Write-Host 'Repository ZIP downloaded successfully.'
-
-Write-Host '===== Extracting Agent Memory repository ====='
-
-function Expand-ZIPFile($file, $destination)
-{
-    $shell = New-Object -ComObject shell.application
-    $zip = $shell.NameSpace($file)
-
-    foreach ($item in $zip.items())
-    {
-        $shell.Namespace($destination).copyhere($item)
+    if (Test-Path $repoZipPath) {
+        Remove-Item $repoZipPath -Force
     }
+
+    if (Test-Path $repoRoot) {
+        Remove-Item $repoRoot -Recurse -Force
+    }
+
+    $WebClient = New-Object System.Net.WebClient
+    $WebClient.DownloadFile($repoZipUrl, $repoZipPath)
+
+    Write-Host 'Repository ZIP downloaded successfully.'
+
+    Write-Host '===== Extracting Agent Memory repository ====='
+
+    function Expand-ZIPFile($file, $destination) {
+        $shell = New-Object -ComObject shell.application
+        $zip = $shell.NameSpace($file)
+
+        foreach ($item in $zip.items()) {
+            $shell.Namespace($destination).copyhere($item)
+        }
+    }
+
+    Expand-ZIPFile -File $repoZipPath -Destination $labRoot
+
+    Write-Host 'Repository extracted successfully.'
+
+    if (Test-Path $repoZipPath) {
+        Remove-Item $repoZipPath -Force
+    }
+
+    if (-not (Test-Path $repoRoot)) {
+        throw "Repository extraction failed. '$repoRoot' was not found."
+    }
+
+    Write-Host "Repository is ready at $repoRoot"
+    Write-Host 'Learner step: open VS Code, go to C:\LabFiles, and open the agent-memory repo.'
 }
-
-Expand-ZIPFile -File $repoZipPath -Destination $labRoot
-
-Write-Host 'Repository extracted successfully.'
-
-if (Test-Path $repoZipPath) {
-    Remove-Item $repoZipPath -Force
+catch {
+    Write-Host "SETUP FAILED: $($_.Exception.Message)"
+    Write-Host $_.ScriptStackTrace
+    throw
 }
-
-if (-not (Test-Path $repoRoot)) {
-    throw "Repository extraction failed. '$repoRoot' was not found."
-}
-
-Write-Host "Repository is ready at $repoRoot"
-Write-Host 'Learner step: open VS Code, go to C:\LabFiles, and open the agent-memory repo.'
 finally {
     Stop-Transcript
 }
