@@ -1,0 +1,37 @@
+[
+  {
+    "Name": "Lab : Applying Guardrails and Controls in Microsoft Foundry",
+    "Language": "English",
+    "BaseURL": "https://github.com/CloudLabsAI-Azure/Applying-Guardrails-and-Controls-in-Microsoft-Foundry",
+    "Files": [
+        {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/00_Lab_Overview.md",
+        "Order": 1
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/01_Module0_Introduction_Environment_Setup.md",
+        "Order": 2
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/02_Module1_Exploring_Default_Guardrail.md",
+        "Order": 3
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/03_Module2_Creating_Configuring_Custom_Guardrail.md",
+        "Order": 4
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/04_Module3_Testing_The_Guardrail.md",
+        "Order": 5
+      },
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/05_Module4_Troubleshooting_Best_Practices.md",
+        "Order": 6
+      },	
+      {
+        "RawFilePath": "https://raw.githubusercontent.com/harshavardhan-spektra/MSDN-template/refs/heads/main/Applying-Guardrails-and-Controls-in-Microsoft-Foundry/06_Module5_WrapUp_Next_Steps.md",
+        "Order": 7
+      }
+    ]
+  }
+]
