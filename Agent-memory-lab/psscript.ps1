@@ -144,7 +144,7 @@ try {
 
     Write-Host '===== Downloading Agent Memory repository ====='
 
-    $repoZipUrl = 'https://harshav.blob.core.windows.net/agent-memory/agent-memory.zip'
+    $repoZipUrl = 'https://experienceazure.blob.core.windows.net/templates/advanced-dynamic-memory-architecture-agent-memory/agent-memory.zip'
     $repoZipPath = Join-Path $labRoot 'agent-memory.zip'
 
     if (Test-Path $repoZipPath) {
