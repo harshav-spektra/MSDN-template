@@ -1,77 +1,18 @@
 {
   "properties": {
-    "displayName": "Allow Approved Azure AI Models and Azure AI Search SKUs",
+    "displayName": "Deny All Azure AI Model Deployments",
     "policyType": "Custom",
     "mode": "All",
-    "description": "Allows only approved Azure OpenAI model deployments and Azure AI Search services with approved SKUs.",
+    "description": "Denies the creation or update of all Azure AI model deployments in Microsoft Foundry.",
     "metadata": {
-      "category": "Cognitive Services",
-      "version": "1.1.0"
+      "category": "Microsoft Foundry",
+      "version": "1.0.0"
     },
     "parameters": {},
     "policyRule": {
       "if": {
-        "anyOf": [
-          {
-            "allOf": [
-              {
-                "field": "type",
-                "equals": "Microsoft.CognitiveServices/accounts/deployments"
-              },
-              {
-                "not": {
-                  "field": "Microsoft.CognitiveServices/accounts/deployments/model.name",
-                  "in": [
-                    "text-embedding-3-large"
-                  ]
-                }
-              }
-            ]
-          },
-          {
-            "allOf": [
-              {
-                "field": "type",
-                "equals": "Microsoft.CognitiveServices/accounts/deployments"
-              },
-              {
-                "field": "Microsoft.CognitiveServices/accounts/deployments/model.name",
-                "equals": "text-embedding-3-large"
-              },
-              {
-                "anyOf": [
-                  {
-                    "not": {
-                      "field": "Microsoft.CognitiveServices/accounts/deployments/sku.name",
-                      "equals": "GlobalStandard"
-                    }
-                  },
-                  {
-                    "field": "Microsoft.CognitiveServices/accounts/deployments/sku.capacity",
-                    "greater": 100
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "allOf": [
-              {
-                "field": "type",
-                "equals": "Microsoft.Search/searchServices"
-              },
-              {
-                "not": {
-                  "field": "Microsoft.Search/searchServices/sku.name",
-                  "in": [
-                    "free",
-                    "basic"
-                  ]
-                }
-              }
-            ]
-          }
-        ]
+        "field": "type",
+        "equals": "Microsoft.CognitiveServices/accounts/deployments"
       },
       "then": {
         "effect": "deny"
