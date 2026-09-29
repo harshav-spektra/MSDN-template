@@ -1,6 +1,7 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+
     "parameters": {
         "identityName": {
             "defaultValue": "quotaCheckIdentity",
@@ -11,39 +12,44 @@
             "type": "String"
         }
     },
+
     "variables": {
         "roleAssignmentId": "[guid(subscription().id, parameters('identityName'), 'cognitiveServicesUsagesReader')]",
         "readerRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'bba48692-92b0-4667-a9ad-c31c7b334ac2')]"
     },
+
     "resources": [
+
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2018-11-30",
             "name": "[parameters('identityName')]",
             "location": "[resourceGroup().location]"
         },
+
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2022-09-01",
             "name": "assignCognitiveServicesUsagesReader",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
-            ],
+
             "properties": {
                 "mode": "Incremental",
+
                 "expressionEvaluationOptions": {
                     "scope": "inner"
                 },
+
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/subscriptionDeploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
+
                     "resources": [
                         {
                             "type": "Microsoft.Authorization/roleAssignments",
                             "apiVersion": "2022-04-01",
                             "name": "[variables('roleAssignmentId')]",
-                            "scope": "[subscription().id]",
+
                             "properties": {
                                 "roleDefinitionId": "[variables('readerRoleDefinitionId')]",
                                 "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2018-11-30').principalId]",
@@ -52,23 +58,33 @@
                         }
                     ]
                 }
-            }
+            },
+
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
+            ]
         },
+
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
             "name": "checkQuotaScript",
             "location": "[resourceGroup().location]",
+
             "dependsOn": [
                 "assignCognitiveServicesUsagesReader"
             ],
+
             "kind": "AzurePowerShell",
+
             "identity": {
                 "type": "UserAssigned",
+
                 "userAssignedIdentities": {
                     "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]": {}
                 }
             },
+
             "properties": {
                 "azPowerShellVersion": "10.4",
                 "timeout": "PT15M",
@@ -78,11 +94,13 @@
             }
         }
     ],
+
     "outputs": {
         "gpt-5.1 Quota": {
             "type": "String",
             "value": "[reference('checkQuotaScript').outputs.availableLocations_gpt51]"
         },
+
         "text-embedding-3-small Quota": {
             "type": "String",
             "value": "[reference('checkQuotaScript').outputs.availableLocations_textembedding3small]"
