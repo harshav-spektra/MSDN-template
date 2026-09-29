@@ -12,9 +12,9 @@
         }
     },
     "variables": {
-    "roleAssignmentId": "[guid(concat(resourceGroup().id, 'cognitiveServicesUsagesReader'))]",
-    "readerRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'bba48692-92b0-4667-a9ad-c31c7b334ac2')]"
-},
+        "roleAssignmentId": "[guid(subscription().id, parameters('identityName'), 'cognitiveServicesUsagesReader')]",
+        "readerRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'bba48692-92b0-4667-a9ad-c31c7b334ac2')]"
+    },
     "resources": [
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
@@ -23,19 +23,19 @@
             "location": "[resourceGroup().location]"
         },
         {
-    "type": "Microsoft.Authorization/roleAssignments",
-    "apiVersion": "2018-09-01-preview",
-    "name": "[variables('roleAssignmentId')]",
-    "dependsOn": [
-        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
-    ],
-    "properties": {
-        "roleDefinitionId": "[variables('readerRoleDefinitionId')]",
-        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2018-11-30').principalId]",
-        "scope": "[subscription().id]",
-        "principalType": "ServicePrincipal"
-    }
-},
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "scope": "[subscription().id]",
+            "name": "[variables('roleAssignmentId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerRoleDefinitionId')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2018-11-30').principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
@@ -43,7 +43,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]",
-                "[resourceId('Microsoft.Authorization/roleAssignments', variables('roleAssignmentId'))]"
+                "[variables('roleAssignmentId')]"
             ],
             "kind": "AzurePowerShell",
             "identity": {
